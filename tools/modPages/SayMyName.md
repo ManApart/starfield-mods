@@ -1,4 +1,3 @@
-
 I love how Vasco can say 1000 player names. It's such a neat immersion booster. When I saw all the recent developments in AI, I thought it would be cool to use AI to have more characters say your name. To do the project, I wanted to find an AI that was free and could be run locally (not in the cloud).
 
 The goal of this mod is to feature nearly all the same player names as Vasco says in the game, with the possibility of adding names by request, for a period of time. (See Requests and bug reports below).
@@ -9,12 +8,15 @@ I'll add a video in the video section for a preview of the voice, and you can se
 
 To see which file to download, see the name groups listed [url=https://github.com/ManApart/starfield-mods/blob/master/tools/reference/sayMyName/name-groups.txt]here[/url]. Each line in this file should be a different zip file.
 
-[youtube]ntfGE45APko[/youtube]
+[youtube]_zntlo4DgnQ[/youtube]
 
 If you like this mod, check out my [url=https://manapart.github.io/starfield-eye/#about]companion app[/url], and my [url=https://www.nexusmods.com/starfield/users/1398716?tab=user+files]other Starfield mods[/url]
 
-
-
+Say My Name Mods
+[list]
+[*][url=https://www.nexusmods.com/starfield/mods/8186?tab=description]Andreja[/url]﻿
+[*][url=https://www.nexusmods.com/starfield/mods/8297]Sarah[/url]﻿
+[/list]
 
 [b]## Limits
 [/b]
