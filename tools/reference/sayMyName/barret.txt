@@ -1,1 +1,17 @@
-009f7c45,Hello captain: {name}. You're looking swell
+009f7c45,Hello captain: {name}.
+00be19a2,Welcome: {name}.
+00ee99f4,I could listen to you until the end of time: {name}.
+003e4ae9,Hello right back at you: {name}.
+002b02b7,You're carrying a lot: {name}.
+0076dddb,We can't possibly carry anything else. What can we get rid of?
+00c66bfb,Do we actually need all of that stuff: {name}?
+00aa24ea,Want me to carry anything else: {name}?
+006d152f,Let me know if I should carry any of that: {name}.
+00b0b25d,I might have some room if you need me to carry something: {name}.
+00b1f028,Go ahead, we have time to rearrange things: {name}.
+00bc39bb,Need something: {name}?
+00d217d9,Right. Later: {name}.
+003b48eb,Sure, I've got a minute: {name}.
+001f45bf,See you later: {name}.
+00cb0021,Can I carry that for you: {name}?
+0053d3d1,Hey: {name}.

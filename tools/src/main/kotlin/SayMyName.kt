@@ -22,7 +22,7 @@ fun main() {
     val onlyName = (sayMyNameConfig["onlyName"] as String?)?.takeIf { it.isNotBlank() }?.capitalize()
     val onlyLine = (sayMyNameConfig["onlyLine"] as String?)?.takeIf { it.isNotBlank() }
 
-    val playerNames = File("input/sayMyName/names.txt").readLines()
+    val playerNames = File("reference/sayMyName/name-groups.txt").readLines()
         .flatMap { it.split(",") }.map { it.trim().capitalize() }.filter { it.isNotBlank() }
         .let { names -> if (onlyName != null) names.filter { it == onlyName } else names }
 
