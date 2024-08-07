@@ -28,7 +28,7 @@ fun main() {
 }
 
 //Requires a folder with ww2ogg.exe and ReVorb.exe
-private fun File.wemToWav(ww2oggFolder: File) {
+fun File.wemToWav(ww2oggFolder: File) {
     Files.copy(toPath(), Path(ww2oggFolder.absolutePath + "/temp.wem"), StandardCopyOption.REPLACE_EXISTING)
     ww2oggFolder.runCommand(listOf("wine", "ww2ogg.exe", "temp.wem", "--pcb", "./packed_codebooks_aoTuV_603.bin"))
     ww2oggFolder.runCommand("wine ReVorb.exe temp.ogg temp1.ogg")
@@ -36,14 +36,14 @@ private fun File.wemToWav(ww2oggFolder: File) {
     Files.copy(Path(ww2oggFolder.absolutePath + "/temp.wav"), File("${parentFile.absolutePath}/$nameWithoutExtension.wav").toPath(), StandardCopyOption.REPLACE_EXISTING)
 }
 
-private fun File.wemToOgg(ww2oggFolder: File) {
+fun File.wemToOgg(ww2oggFolder: File) {
     Files.copy(toPath(), Path(ww2oggFolder.absolutePath + "/temp.wem"), StandardCopyOption.REPLACE_EXISTING)
     ww2oggFolder.runCommand(listOf("wine", "ww2ogg.exe", "temp.wem", "--pcb", "./packed_codebooks_aoTuV_603.bin"))
     ww2oggFolder.runCommand("wine ReVorb.exe temp.ogg temp1.ogg")
     Files.copy(Path(ww2oggFolder.absolutePath + "/temp1.ogg"), File("${parentFile.absolutePath}/$nameWithoutExtension.ogg").toPath(), StandardCopyOption.REPLACE_EXISTING)
 }
 
-private fun File.wemToWavVgm(vgmFolder: File) {
+fun File.wemToWavVgm(vgmFolder: File) {
     Files.copy(toPath(), Path(vgmFolder.absolutePath + "/temp.wem"), StandardCopyOption.REPLACE_EXISTING)
     vgmFolder.runCommand("./vgmstream-cli -o temp.wav temp.wem")
     Files.copy(Path(vgmFolder.absolutePath + "/temp.wav"), File("${parentFile.absolutePath}/$nameWithoutExtension.wav").toPath(), StandardCopyOption.REPLACE_EXISTING)
