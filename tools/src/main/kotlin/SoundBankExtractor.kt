@@ -59,10 +59,10 @@ private fun moveFiles(source: File, destination: File) {
                     val source = File("${source.absolutePath}/soundbanks/${sound.id}.wem")
                     val target = File(destination.absolutePath + "/" + sound.path.replace(".wem", "").replace("\\", "/") + "-${sound.id}.wem")
                         .also { it.parentFile.mkdirs() }
+//                        println("$source\n\t$target")
                     if (!source.exists()) {
                         println("Skipping ${sound.shortName}; source missing")
                     } else if (!target.exists()) {
-//                        println("$sourcePath\n\t$target")
                         Files.copy(source.toPath(), target.toPath())
                     }
                 }

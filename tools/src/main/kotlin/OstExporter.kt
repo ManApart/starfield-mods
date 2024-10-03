@@ -14,7 +14,7 @@ fun main() {
 
     File(input).listFiles().forEach { folder ->
         println("\nProcessing ${folder.name}")
-        processDirectory(folder, output, tool)
+        processDirectory(folder, output + "/${folder.name}", tool)
     }
 }
 
@@ -23,11 +23,10 @@ private fun processDirectory(folder: File, output: String, tool: File) {
     folder.listFiles().filter { !it.isDirectory }.forEach {
         val cleanName = if (it.nameWithoutExtension.contains("_")) it.nameWithoutExtension.substring(0, it.nameWithoutExtension.lastIndexOf("_")) else it.nameWithoutExtension
 
-        val voiceFile = File("${output}/${folder.nameWithoutExtension}/${cleanName}.mp3")
+        val voiceFile = File("${output}/${cleanName}.mp3")
         if (!voiceFile.exists()) {
             println(cleanName)
             try {
-
                 it.wemToWavVgm(tool)
                 it.parentFile.runCommand(listOf("ffmpeg", "-i", "${it.nameWithoutExtension}.wav", "temp.mp3"))
                 voiceFile.parentFile.mkdirs()
