@@ -23,7 +23,7 @@ private fun rename(folder: File, destination: File) {
                 println(File(destination.absolutePath + "/" + it.name))
             } else {
                 try {
-                    it.copyTo(File(destination.absolutePath + "/" + it.name))
+                    it.copyTo(File(destination.absolutePath + "/" + it.name.replace("'", "")))
                 } catch (_: FileAlreadyExistsException) {
                 }
             }
