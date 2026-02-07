@@ -11,3 +11,14 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
     akQuest.addContainer(akNewContainer)
   endIf
 endEvent
+
+Event OnEquipped(Actor akActor)
+  Debug.Notification("Sort tool equipped by " + akActor)
+EndEvent
+
+Event OnActivate(ObjectReference akActionRef)
+    Debug.Notification("Sort tool activated by " + akActionRef)
+  if akActionRef == Game.GetPlayer()
+    akQuest.sortItems()
+  endif
+EndEvent

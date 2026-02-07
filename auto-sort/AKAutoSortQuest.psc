@@ -1,44 +1,39 @@
 Scriptname AKAutoSortQuest extends Quest
 
 
- struct SortCell
- 	Cell sortCell
-	{Cell the chests are in}
-
- 	FormList chests
- 	{The tracked chests}
- endStruct
-
-SortCell[] Property sortedCells Auto
-Cell[] Property Cells Auto
-int Property trackedCells auto
+Cell[] Property TrackedCells Auto
+FormList[] Property TrackedChests Auto
+int Property TrackedCellCount auto
 
 function addContainer(ObjectReference containerToAdd)
   Actor player = Game.GetPlayer()
   Cell currentCell = player.GetParentCell()
-  ; int cellI = Cells.FindStruct("sortCell", currentCell, 0)
-  int cellI = Cells.Find(currentCell)
-  Debug.Notification(trackedCells + " tracked. Found cell at " + cellI)
+  int cellI = TrackedCells.Find(currentCell)
+  Debug.Notification(TrackedCellCount + " tracked. Found cell at " + cellI)
   
-  ;Add Cell struct if needed
+  ;Add Cell if needed
   if (cellI == -1)
-    cellI = trackedCells
-    trackedCells +=1
-    Debug.Notification("Cell doesn't exist, tracking at " + trackedCells)
-    Cells[cellI] = currentCell
-    ; cellI = Cells.Length
-		; SortCell c2 = new SortCell
-    ; c2.sortCell = currentCell
-    ; c2.chests = new FormList
-    ;Cells.add
+    cellI = TrackedCellCount
+    TrackedCellCount +=1
+    Debug.Notification("Cell doesn't exist, set CellI to " + cellI)
+    TrackedCells[cellI] = currentCell
   endif
-
-
-  ; chests.AddForm(containerToAdd)
+  FormList chests = TrackedChests[cellI]
+  chests.AddForm(containerToAdd)
+  Debug.Notification("Now tracking " +chests.GetSize() + " chests in "+ CellI +", chest contained : "+ chests.HasForm(containerToAdd))
+  Debug.Notification(chests)
 
 EndFunction
 
 function sortItems()
   Actor player = Game.GetPlayer()
   Cell currentCell = player.GetParentCell()
+  int cellI = TrackedCells.Find(currentCell)
+   if (cellI == -1)
+    Debug.Notification("Cell doesn't exist, Not sorting")
+  Else
+    FormList chests = TrackedChests[cellI]
+    Debug.Notification("Found " + chests.GetSize()  + " tracked chests")
+  endif
+
 EndFunction
