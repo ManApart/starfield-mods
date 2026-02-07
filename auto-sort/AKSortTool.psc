@@ -1,6 +1,7 @@
 Scriptname AKSortTool extends ObjectReference Const
 
 AKAutoSortQuest Property akQuest Auto Const
+Armor Property tool Auto Const
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
   if akNewContainer == Game.GetPlayer()
@@ -13,12 +14,12 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
 endEvent
 
 Event OnEquipped(Actor akActor)
-  Debug.Notification("Sort tool equipped by " + akActor)
-EndEvent
-
-Event OnActivate(ObjectReference akActionRef)
-    Debug.Notification("Sort tool activated by " + akActionRef)
-  if akActionRef == Game.GetPlayer()
+  if akActor == Game.GetPlayer()
+    Debug.Notification("Sort tool has been equipped by " + akActor)
+    akActor.unEquipItem(tool)
     akQuest.sortItems()
+else
+    Debug.Notification("Not the player " + akActor)
   endif
 EndEvent
+

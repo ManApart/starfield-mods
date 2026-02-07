@@ -4,9 +4,8 @@ Scriptname Fragments:Quests:QF_AKAutoSort_01000806 Extends Quest Hidden Const
 ;BEGIN FRAGMENT Fragment_Stage_0000_Item_00
 Function Fragment_Stage_0000_Item_00()
 ;BEGIN CODE
-ObjectReference tool = Game.GetPlayer().PlaceAtMe(PAKSortTool)
+ObjectReference tool = Game.GetPlayer().PlaceAtMe(SortToolArmor)
 Game.GetPlayer().addItem(tool, 1, true)
-Game.GetPlayer().addSpell(SortSpell)
 Debug.Notification("Configured Auto Store")
 ;END CODE
 EndFunction
@@ -14,6 +13,4 @@ EndFunction
 
 ;END FRAGMENT CODE - Do not edit anything between this and the begin comment
 
-MiscObject Property PAKSortTool Auto Const Mandatory
-
-Spell Property SortSpell Auto Const
+Armor Property SortToolArmor Auto Const
