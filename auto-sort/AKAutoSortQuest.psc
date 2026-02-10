@@ -43,9 +43,17 @@ function addContainer(ObjectReference containerToAdd)
   endif
 EndFunction
 
-;TODO - remove function should clear formlist and set cell and object to none
-function removeContainer(ObjectReference containerToAdd)
-  Debug.Notification("Removing chest")
+function removeContainer(ObjectReference containerToRemove)
+  int chestI = TrackedChests.FindStruct("chest", containerToRemove)
+  if (chestI == -1)
+    Debug.Notification("Chest is not tracked")
+  else
+    SortedChest chest = TrackedChests[chestI]
+    chest.parentCell = NoneCell
+    chest.chest = NoneChest
+    chest.sortWords.Revert()
+    Debug.Notification("Chest is no longer tracked")
+  endif
 endFunction
 
 function sortItems()
