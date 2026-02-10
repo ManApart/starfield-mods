@@ -1,7 +1,6 @@
 Scriptname AKAutoSortQuest extends Quest
 
-;Import CassiopeiaPapyrusExtenders
-;CassiopeiaPapyrusExtener Property Utils Auto Const
+Import CassiopeiaPapyrusExtender
 
 
 SortedChest[] Property TrackedChests Auto
@@ -36,7 +35,7 @@ function addContainer(ObjectReference containerToAdd)
       chest.parentCell = currentCell
       chest.chest = containerToAdd
       ;Hard code for now
-      containerToAdd.addKeyword(HardcodedKeyword)
+      chest.sortWords.addForm(HardcodedKeyword)
       Debug.Notification("Chest is now tracked")
     endif
   else
@@ -50,34 +49,37 @@ function removeContainer(ObjectReference containerToAdd)
 endFunction
 
 function sortItems()
-  Debug.Notification("Sorting Items")
   Actor player = Game.GetPlayer()
   Cell currentCell = player.GetParentCell()
-  int i = TrackedChests.FindStruct("parentCell", currentCell)
+  Form[] items = GetInventoryItems(player, true)
+  Int i = items.length
+  Debug.Notification("Sorting " + i + " Items")
 
-  ;For each item in inventory, loop
-  ;Find by cell, for each, do sort, move to next
-  while (i != -1)
-    SortedChest chest = TrackedChests[i]
-    Debug.Notification("Found chest: " + chest.chest.GetFormID())
-    i = TrackedChests.FindStruct("parentCell", currentCell, i+1)
+  while (i > 0)
+    i -= 1
+    Form item = items[i]
+    ;TODO - don't move favorites
+    if (!player.IsEquipped(item))
+      sortItem(player, currentCell, item, i)
+    endif
   endWhile
 
   Debug.Notification("Sorting Complete")
-
 EndFunction
 
-; function doSort(Actor player, FormList chests)
-;   Int sortedItems = 0
-;   ; Form[] items = GetInventoryItems(player)
+function sortItem(Actor player, Cell currentCell, Form item, int itemIndex)
+  ;Find chests by cell, for each, do sort, move to next
+  int i = TrackedChests.FindStruct("parentCell", currentCell)
+  while (i != -1)
+    SortedChest chest = TrackedChests[i]
+    if (item.HasKeywordInFormList(chest.sortWords))
+      int count = GetItemStackCount(player, itemIndex)
+      player.RemoveItem(item, count, true, chest.chest)
+      return
+    endif
 
-;   ; Int iPlayerItem = items.length
-;   ; Debug.Notification("Sorting through " + iPlayerItem + " items into " + chests.GetSize() + " chests")
-;     ; iPlayerItem -= 1
-;     ; Form itemToSort = player.GetNthForm(iPlayerItem)
-  
-;     ; if (!player.IsEquipped(itemToSort) && !Game.IsObjectFavorited(itemToSort))
-;     ; endif
-;     return false
-; endFunction
+    i = TrackedChests.FindStruct("parentCell", currentCell, i+1)
+  endWhile
+
+endFunction
 

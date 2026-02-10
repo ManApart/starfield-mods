@@ -15,11 +15,10 @@ endEvent
 
 Event OnEquipped(Actor akActor)
   if akActor == Game.GetPlayer()
-    Debug.Notification("Sort tool has been equipped by " + akActor)
-    akActor.unEquipItem(tool)
+    akActor.unEquipItem(tool, false, true)
     akQuest.sortItems()
 else
-    Debug.Notification("Not the player " + akActor)
+    Debug.Notification("Sort tool equipped by a non player " + akActor)
   endif
 EndEvent
 
