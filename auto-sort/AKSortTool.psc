@@ -2,6 +2,7 @@ Scriptname AKSortTool extends ObjectReference Const
 
 AKAutoSortQuest Property akQuest Auto Const
 Armor Property tool Auto Const
+ObjectReference Property menu Auto Const
 
 Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldContainer)
   if akNewContainer == Game.GetPlayer()
@@ -9,7 +10,8 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
     Game.GetPlayer().AddItem(self, 1, true)
   else
     akNewContainer.RemoveItem(self, 1, true, Game.GetPlayer())
-    akQuest.addContainer(akNewContainer)
+    ; akQuest.addContainer(akNewContainer)
+    menu.Activate(Game.GetPlayer())
   endIf
 endEvent
 
