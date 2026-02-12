@@ -18,5 +18,13 @@ akQuest.removeSelectedContainer()
 EndFunction
 ;END FRAGMENT
 
+;BEGIN FRAGMENT Fragment_TerminalMenu_03
+Function Fragment_TerminalMenu_03(ObjectReference akTerminalRef)
+;BEGIN CODE
+Debug.notification("Sort words: " + akQuest.getSortWords())
+;END CODE
+EndFunction
+;END FRAGMENT
+
 ;END FRAGMENT CODE - Do not edit anything between this and the begin comment
 AKAutoSortQuest Property akQuest Auto Const

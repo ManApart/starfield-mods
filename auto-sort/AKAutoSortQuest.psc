@@ -64,6 +64,16 @@ function removeContainer(ObjectReference containerToRemove)
   endif
 endFunction
 
+Form[] function getSortWords()
+ int chestI = TrackedChests.FindStruct("chest", selectedChest)
+  if (chestI == -1)
+    Debug.Notification("Chest is not tracked")
+    return new Form[0]
+  else
+    return TrackedChests[chestI].sortWords.GetArray()
+  endif
+endFunction
+
 function sortItems()
   Actor player = Game.GetPlayer()
   Cell currentCell = player.GetParentCell()
