@@ -10,7 +10,8 @@ Event OnContainerChanged(ObjectReference akNewContainer, ObjectReference akOldCo
     Game.GetPlayer().AddItem(self, 1, true)
   else
     akNewContainer.RemoveItem(self, 1, true, Game.GetPlayer())
-    ; akQuest.addContainer(akNewContainer)
+    ;set active container on main quest
+    akQuest.selectedChest = akNewContainer
     menu.Activate(Game.GetPlayer())
   endIf
 endEvent

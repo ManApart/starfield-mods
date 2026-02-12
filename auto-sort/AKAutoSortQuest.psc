@@ -6,6 +6,7 @@ Import CassiopeiaPapyrusExtender
 SortedChest[] Property TrackedChests Auto
 Cell Property NoneCell Auto
 ObjectReference Property NoneChest Auto
+ObjectReference Property selectedChest Auto
 
 ;TODO - get keywords from menu and delete this
 Keyword Property HardcodedKeyword auto
@@ -21,6 +22,9 @@ struct SortedChest
       {Keywords Sorted into this chest}
 endStruct
 
+function addSelectedContainer()
+  addContainer(selectedChest)
+endFunction
 
 function addContainer(ObjectReference containerToAdd)
   int chestI = TrackedChests.FindStruct("chest", containerToAdd)
@@ -42,6 +46,10 @@ function addContainer(ObjectReference containerToAdd)
     Debug.Notification("Chest is already tracked")
   endif
 EndFunction
+
+function removeSelectedContainer()
+  removeContainer(selectedChest)
+endFunction
 
 function removeContainer(ObjectReference containerToRemove)
   int chestI = TrackedChests.FindStruct("chest", containerToRemove)
