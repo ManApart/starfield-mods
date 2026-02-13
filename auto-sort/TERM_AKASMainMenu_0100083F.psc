@@ -26,5 +26,21 @@ Debug.notification("Sort words: " + akQuest.getSortWords())
 EndFunction
 ;END FRAGMENT
 
+;BEGIN FRAGMENT Fragment_TerminalMenu_04
+Function Fragment_TerminalMenu_04(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.AddKeyword = true
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_TerminalMenu_05
+Function Fragment_TerminalMenu_05(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.AddKeyword = false
+;END CODE
+EndFunction
+;END FRAGMENT
+
 ;END FRAGMENT CODE - Do not edit anything between this and the begin comment
 AKAutoSortQuest Property akQuest Auto Const

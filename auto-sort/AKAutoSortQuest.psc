@@ -7,6 +7,7 @@ SortedChest[] Property TrackedChests Auto
 Cell Property NoneCell Auto
 ObjectReference Property NoneChest Auto
 ObjectReference Property selectedChest Auto
+bool Property AddKeyword Auto
 
 ;TODO - get keywords from menu and delete this
 Keyword Property HardcodedKeyword auto
@@ -39,7 +40,7 @@ function addContainer(ObjectReference containerToAdd)
       chest.parentCell = currentCell
       chest.chest = containerToAdd
       ;Hard code for now
-      chest.sortWords.addForm(HardcodedKeyword)
+      ; chest.sortWords.addForm(HardcodedKeyword)
       Debug.Notification("Chest is now tracked")
     endif
   else
@@ -73,6 +74,30 @@ Form[] function getSortWords()
     return TrackedChests[chestI].sortWords.GetArray()
   endif
 endFunction
+
+function updateSortWords(Keyword word)
+  int chestI = TrackedChests.FindStruct("chest", selectedChest)
+  if (chestI == -1)
+    Debug.Notification("Chest is not tracked")
+  else
+    SortedChest chest = TrackedChests[chestI]
+    if (AddKeyword)
+      addSortWords(chest, word)
+    else
+      removeSortWords(chest, word)
+    endif
+  endif
+EndFunction
+
+function addSortWords(SortedChest chest, Keyword word)
+  chest.sortWords.addForm(word)
+  Debug.Notification("Added word" + word)
+EndFunction
+
+function removeSortWords(SortedChest chest, Keyword word)
+  chest.sortWords.removeAddedForm(word)
+  Debug.Notification("Removed word" + word)
+EndFunction
 
 function sortItems()
   Actor player = Game.GetPlayer()
