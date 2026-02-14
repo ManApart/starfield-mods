@@ -33,6 +33,86 @@ akQuest.updateSortWords(ObjectTypeArmor)
 EndFunction
 ;END FRAGMENT
 
+;BEGIN FRAGMENT Fragment_TerminalMenu_05
+Function Fragment_TerminalMenu_05(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.updateSortWords(ObjectTypeChem)
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_TerminalMenu_06
+Function Fragment_TerminalMenu_06(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.updateSortWords(ObjectTypeDataSlate)
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_TerminalMenu_07
+Function Fragment_TerminalMenu_07(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.updateSortWords(ObjectTypeJunk)
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_TerminalMenu_08
+Function Fragment_TerminalMenu_08(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.updateSortWords(ObjectTypeKeycard)
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_TerminalMenu_09
+Function Fragment_TerminalMenu_09(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.updateSortWords(ObjectTypeMissionCargo)
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_TerminalMenu_10
+Function Fragment_TerminalMenu_10(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.updateSortWords(ObjectTypePlanetSurveySlate)
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_TerminalMenu_11
+Function Fragment_TerminalMenu_11(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.updateSortWords(ObjectTypeShipRepairKit)
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_TerminalMenu_12
+Function Fragment_TerminalMenu_12(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.updateSortWords(ObjectTypeStimpak)
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_TerminalMenu_13
+Function Fragment_TerminalMenu_13(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.updateSortWords(ObjectTypeWater)
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_TerminalMenu_14
+Function Fragment_TerminalMenu_14(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.updateSortWords(ObjectTypeWeapon)
+;END CODE
+EndFunction
+;END FRAGMENT
+
 ;END FRAGMENT CODE - Do not edit anything between this and the begin comment
 AKAutoSortQuest Property akQuest Auto Const
 Keyword Property ObjectTypeAmmo Auto Const
