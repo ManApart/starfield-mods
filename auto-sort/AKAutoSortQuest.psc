@@ -1,4 +1,4 @@
-Scriptname AKAutoSortQuest extends Quest
+Scriptname AKAutoSortQuest extends Quest conditional
 
 Import CassiopeiaPapyrusExtender
 
@@ -8,9 +8,7 @@ Cell Property NoneCell Auto
 ObjectReference Property NoneChest Auto
 ObjectReference Property selectedChest Auto
 bool Property AddKeyword Auto
-
-;TODO - get keywords from menu and delete this
-Keyword Property HardcodedKeyword auto
+bool Property selectedChestIsTracked Auto Conditional
 
 struct SortedChest
       Cell parentCell
@@ -23,8 +21,21 @@ struct SortedChest
       {Keywords Sorted into this chest}
 endStruct
 
+function setSelectedChest(ObjectReference chest)
+  selectedChest = chest
+  selectedChestIsTracked = TrackedChests.FindStruct("chest", selectedChest) != -1
+endFunction
+
 function addSelectedContainer()
   addContainer(selectedChest)
+endFunction
+
+bool function selectedChestHasSortWord(Keyword word)
+  int chestI = TrackedChests.FindStruct("chest", selectedChest)
+  if (chestI == -1)
+    return false
+  endif
+  return TrackedChests[chestI].sortWords.HasForm(word)
 endFunction
 
 function addContainer(ObjectReference containerToAdd)
@@ -39,8 +50,6 @@ function addContainer(ObjectReference containerToAdd)
       SortedChest chest = TrackedChests[freeSlot]
       chest.parentCell = currentCell
       chest.chest = containerToAdd
-      ;Hard code for now
-      ; chest.sortWords.addForm(HardcodedKeyword)
       Debug.Notification("Chest is now tracked")
     endif
   else
