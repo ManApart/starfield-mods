@@ -10,3 +10,4 @@ cp $DATA/scripts/source/fragments/terminals/TERM__01000EA3.psc ./auto-sort/TERM_
 cp $DATA/scripts/source/fragments/terminals/TERM__01000EA4.psc ./auto-sort/TERM__01000EA4.psc
 cp $DATA/scripts/source/fragments/terminals/TERM__01000EA5.psc ./auto-sort/TERM__01000EA5.psc
 cp $DATA/scripts/source/fragments/terminals/TERM__01000EAC.psc ./auto-sort/TERM__01000EAC.psc
+cp $DATA/scripts/source/fragments/terminals/TERM__01000EAD.psc ./auto-sort/TERM__01000EAD.psc
