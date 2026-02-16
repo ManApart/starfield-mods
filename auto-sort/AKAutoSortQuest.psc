@@ -7,6 +7,7 @@ SortedChest[] Property TrackedChests Auto
 Cell Property NoneCell Auto
 ObjectReference Property NoneChest Auto
 ObjectReference Property selectedChest Auto
+ActorValue Property CarryWeight Auto
 bool Property AddKeyword Auto
 bool Property selectedChestIsTracked Auto Conditional
 
@@ -132,8 +133,8 @@ function sortItem(Actor player, Cell currentCell, Form item, int itemIndex)
   int i = TrackedChests.FindStruct("parentCell", currentCell)
   while (i != -1)
     SortedChest chest = TrackedChests[i]
-    if (item.HasKeywordInFormList(chest.sortWords))
-      int count = GetItemStackCount(player, itemIndex)
+    int count = GetItemStackCount(player, itemIndex)
+    if (hasCapacity(chest.chest, item, count) && item.HasKeywordInFormList(chest.sortWords))
       player.RemoveItem(item, count, true, chest.chest)
       return
     endif
@@ -143,3 +144,9 @@ function sortItem(Actor player, Cell currentCell, Form item, int itemIndex)
 
 endFunction
 
+bool function hasCapacity(ObjectReference chest, Form item, int count)
+  float currentFill = chest.GetWeightInContainer()
+  float max = chest.GetValue(CarryWeight)
+  float needed = item.GetWeight() * count
+  return currentFill + needed <= max
+endFunction
