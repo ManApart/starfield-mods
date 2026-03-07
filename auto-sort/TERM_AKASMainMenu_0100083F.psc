@@ -29,7 +29,7 @@ EndFunction
 ;BEGIN FRAGMENT Fragment_TerminalMenu_04
 Function Fragment_TerminalMenu_04(ObjectReference akTerminalRef)
 ;BEGIN CODE
-akQuest.AddKeyword = true
+akQuest.AddKeyword = false
 ;END CODE
 EndFunction
 ;END FRAGMENT
@@ -61,7 +61,15 @@ EndFunction
 ;BEGIN FRAGMENT Fragment_TerminalMenu_08
 Function Fragment_TerminalMenu_08(ObjectReference akTerminalRef)
 ;BEGIN CODE
-akQuest.removeItemsInChestFromExcludeList()
+akQuest.addSelectedContainerAsExactMatch()
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_TerminalMenu_09
+Function Fragment_TerminalMenu_09(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.addSelectedContainerAsExactMatch()
 ;END CODE
 EndFunction
 ;END FRAGMENT
