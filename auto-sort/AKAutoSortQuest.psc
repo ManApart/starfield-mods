@@ -1,6 +1,7 @@
 Scriptname AKAutoSortQuest extends Quest conditional
 
 Import CassiopeiaPapyrusExtender
+Import AK_SF_Utils
 
 
 SortedChest[] Property TrackedChests Auto
@@ -10,6 +11,7 @@ ObjectReference Property selectedChest Auto
 ActorValue Property CarryWeight Auto
 bool Property AddKeyword Auto
 bool Property selectedChestIsTracked Auto Conditional
+Formlist Property ExcludeList Auto
 
 struct SortedChest
       Cell parentCell
@@ -75,13 +77,17 @@ function removeContainer(ObjectReference containerToRemove)
   endif
 endFunction
 
-Form[] function getSortWords()
+function printSortWords()
  int chestI = TrackedChests.FindStruct("chest", selectedChest)
   if (chestI == -1)
     Debug.Notification("Chest is not tracked")
-    return new Form[0]
   else
-    return TrackedChests[chestI].sortWords.GetArray()
+    Form[] raw = TrackedChests[chestI].sortWords.GetArray()
+    Int i = raw.length
+    while (i > 0)
+      i -= 1
+      Debug.Notification(raw[i])
+    endWhile
   endif
 endFunction
 
@@ -113,14 +119,15 @@ function sortItems()
   Actor player = Game.GetPlayer()
   Cell currentCell = player.GetParentCell()
   Form[] items = GetInventoryItems(player, true)
+  ; Form[] favs = GetPlayerFavoritedForms()
   Int i = items.length
   Debug.Notification("Sorting " + i + " Items")
 
   while (i > 0)
     i -= 1
     Form item = items[i]
-    ;TODO - don't move favorites
-    if (!player.IsEquipped(item))
+    ; && !ArrayContainsForm(favs, item)
+    if (!player.IsEquipped(item) && !ExcludeList.HasForm(item))
       sortItem(player, currentCell, item, i)
     endif
   endWhile
@@ -128,8 +135,34 @@ function sortItems()
   Debug.Notification("Sorting Complete")
 EndFunction
 
+bool Function ArrayContainsForm(Form[] forms, Form target)
+    if forms == None || target == None
+        return false
+    endif
+
+    int i = 0
+    while i < forms.Length
+        if forms[i] == target
+            return true
+        endif
+        i += 1
+    endwhile
+
+    return false
+EndFunction
+
+bool Function ArrayContainsInt(Int[] arr, Int value)
+    int i = 0
+    while i < arr.Length
+        if arr[i] == value
+            return true
+        endif
+        i += 1
+    endwhile
+    return false
+EndFunction
+
 function sortItem(Actor player, Cell currentCell, Form item, int itemIndex)
-  ;Find chests by cell, for each, do sort, move to next
   int i = TrackedChests.FindStruct("parentCell", currentCell)
   while (i != -1)
     SortedChest chest = TrackedChests[i]
@@ -149,4 +182,51 @@ bool function hasCapacity(ObjectReference chest, Form item, int count)
   float max = chest.GetValue(CarryWeight)
   float needed = item.GetWeight() * count
   return currentFill + needed <= max
+endFunction
+
+function addFavoritesInChest()
+  Actor player = Game.GetPlayer()
+  Form[] items = GetInventoryItems(selectedChest, true)
+  Int i = items.length
+  while (i > 0)
+    i -= 1
+    Form item = items[i]
+    int count = GetItemStackCount(selectedChest, i)
+    selectedChest.RemoveItem(item, count, true, player)
+    player.MarkItemAsFavorite(item)
+  endWhile
+
+  Debug.Notification("Favorited " + items.length + " items")
+endFunction
+
+function addItemsInChestToExcludeList()
+  Actor player = Game.GetPlayer()
+  Form[] items = GetInventoryItems(selectedChest, true)
+  Int i = items.length
+  
+  while (i > 0)
+    i -= 1
+    Form item = items[i]
+    int count = GetItemStackCount(selectedChest, i)
+    selectedChest.RemoveItem(item, count, true, player)
+    ExcludeList.addForm(item)
+  endWhile
+
+  Debug.Notification("Excluded " + items.length + " items")
+endFunction
+
+function removeItemsInChestFromExcludeList()
+  Actor player = Game.GetPlayer()
+  Form[] items = GetInventoryItems(selectedChest, true)
+  Int i = items.length
+  
+  while (i > 0)
+    i -= 1
+    Form item = items[i]
+    int count = GetItemStackCount(selectedChest, i)
+    selectedChest.RemoveItem(item, count, true, player)
+    ExcludeList.removeAddedForm(item)
+  endWhile
+
+  Debug.Notification("Un-Excluded " + items.length + " items")
 endFunction

@@ -21,7 +21,7 @@ EndFunction
 ;BEGIN FRAGMENT Fragment_TerminalMenu_03
 Function Fragment_TerminalMenu_03(ObjectReference akTerminalRef)
 ;BEGIN CODE
-Debug.notification("Sort words: " + akQuest.getSortWords())
+akQuest.printSortWords()
 ;END CODE
 EndFunction
 ;END FRAGMENT
@@ -38,6 +38,30 @@ EndFunction
 Function Fragment_TerminalMenu_05(ObjectReference akTerminalRef)
 ;BEGIN CODE
 akQuest.AddKeyword = false
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_TerminalMenu_06
+Function Fragment_TerminalMenu_06(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.addFavoritesInChest()
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_TerminalMenu_07
+Function Fragment_TerminalMenu_07(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.addItemsInChestToExcludeList()
+;END CODE
+EndFunction
+;END FRAGMENT
+
+;BEGIN FRAGMENT Fragment_TerminalMenu_08
+Function Fragment_TerminalMenu_08(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.removeItemsInChestFromExcludeList()
 ;END CODE
 EndFunction
 ;END FRAGMENT
