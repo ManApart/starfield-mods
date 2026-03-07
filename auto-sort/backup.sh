@@ -1,5 +1,5 @@
 DATA=/mnt/extradrive1/SteamLibrary/steamapps/common/Starfield/Data
-cp $DATA/AkAutoSort.esp ./auto-sort/AkAutoSort.esp
+cp $DATA/AkAutoSort.esm ./auto-sort/AkAutoSort.esm
 cp $DATA/scripts/source/AKSortTool.psc ./auto-sort/AKSortTool.psc
 cp $DATA/scripts/source/AKAutoSortQuest.psc ./auto-sort/AKAutoSortQuest.psc
 cp $DATA/scripts/source/QF_AKAutoSort_01000806.psc ./auto-sort/QF_AKAutoSort_01000806.psc
