@@ -29,7 +29,7 @@ EndFunction
 ;BEGIN FRAGMENT Fragment_TerminalMenu_04
 Function Fragment_TerminalMenu_04(ObjectReference akTerminalRef)
 ;BEGIN CODE
-akQuest.AddKeyword = false
+akQuest.AddKeyword = true
 ;END CODE
 EndFunction
 ;END FRAGMENT

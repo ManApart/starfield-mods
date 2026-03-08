@@ -1,8 +1,6 @@
 Scriptname AKAutoSortQuest extends Quest conditional
 
 Import CassiopeiaPapyrusExtender
-Import AK_SF_Utils
-
 
 SortedChest[] Property TrackedChests Auto
 ExactMatchChest[] Property ExactMatchChests Auto
@@ -13,6 +11,7 @@ ActorValue Property CarryWeight Auto
 bool Property AddKeyword Auto
 bool Property selectedChestIsTracked Auto Conditional
 Formlist Property ExcludeList Auto
+Armor Property tool Auto Const
 
 struct SortedChest
       Cell parentCell
@@ -189,7 +188,7 @@ function sortItems()
     i -= 1
     Form item = items[i]
     ; && !ArrayContainsForm(favs, item)
-    if (!player.IsEquipped(item) && !ExcludeList.HasForm(item))
+    if (item != tool && !player.IsEquipped(item) && !ExcludeList.HasForm(item))
       sortItem(player, currentCell, item, i)
     endif
   endWhile
