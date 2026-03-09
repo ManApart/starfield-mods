@@ -49,5 +49,6 @@ Does not modify the container itself.
 ## Limitations
 - Only 20 sort chests and 20 exact chests
 - Currently sorts favorites
+- It can take a while, depending by number of items!
 
 ## Troubleshooting
