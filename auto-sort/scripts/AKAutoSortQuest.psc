@@ -10,7 +10,9 @@ ObjectReference Property selectedChest Auto
 ActorValue Property CarryWeight Auto
 bool Property AddKeyword Auto
 bool Property selectedChestIsTracked Auto Conditional
+bool Property IsCurrentlySorting Auto
 Formlist Property ExcludeList Auto
+FormList Property CombinedTrackedSortWords Auto
 Armor Property tool Auto Const
 
 struct SortedChest
@@ -136,6 +138,7 @@ function removeContainer(ObjectReference containerToRemove)
 endFunction
 
 function printSortWords()
+  IsCurrentlySorting = false
   int chestI = TrackedChests.FindStruct("chest", selectedChest)
   int chestO = ExactMatchChests.FindStruct("chest", selectedChest)
   if (chestO != -1)
@@ -178,11 +181,17 @@ EndFunction
 
 function sortItems()
   float t0 = Utility.GetCurrentRealTime()
+  if (IsCurrentlySorting == true)
+    Debug.Notification("Already doing a sort!")
+    return
+  endif
+  IsCurrentlySorting = true
   Actor player = Game.GetPlayer()
   Cell currentCell = player.GetParentCell()
   Form[] items = GetInventoryItems(player, true)
   Int[] exactChestIndexes = getExactChestIndexesInCell(currentCell)
   Int[] trackedChestIndexes = getTrackedChestIndexesInCell(currentCell)
+  prepareCombinedTrackedSortWords(trackedChestIndexes)
   ; Form[] favs = GetPlayerFavoritedForms()
   Int i = items.length
   Debug.Notification("Sorting " + i + " Items")
@@ -196,6 +205,8 @@ function sortItems()
     endif
   endWhile
 
+  float t1 = Utility.GetCurrentRealTime()
+  IsCurrentlySorting = false
   Debug.Trace("Sorting took " + (t1 - t0) + " sec")
   Debug.Notification("Sorting Complete")
 EndFunction
@@ -230,7 +241,9 @@ EndFunction
 function sortItem(Actor player, Form item, int itemIndex, Int[] exactChestIndexes, Int[] trackedChestIndexes)
   int count = GetItemStackCount(player, itemIndex)
   if (!sortItemByExact(player, item, count, exactChestIndexes))
-    sortItemByKeyword(player, item, count, trackedChestIndexes)
+    if (item.HasKeywordInFormList(CombinedTrackedSortWords))
+      sortItemByKeyword(player, item, count, trackedChestIndexes)
+    endif
   endif
 endFunction
 
@@ -332,6 +345,25 @@ int function countTrackedChestsInCell(Cell currentCell)
   endWhile
 
   return matchCount
+endFunction
+
+function prepareCombinedTrackedSortWords(Int[] trackedChestIndexes)
+  CombinedTrackedSortWords.Revert()
+
+  int trackedChestCount = trackedChestIndexes.Length
+  int trackedChestIndex = 0
+  while (trackedChestIndex < trackedChestCount)
+    Form[] rawSortWords = TrackedChests[trackedChestIndexes[trackedChestIndex]].sortWords.GetArray()
+    int sortWordIndex = 0
+    int sortWordCount = rawSortWords.Length
+
+    while (sortWordIndex < sortWordCount)
+      CombinedTrackedSortWords.AddForm(rawSortWords[sortWordIndex])
+      sortWordIndex += 1
+    endWhile
+
+    trackedChestIndex += 1
+  endWhile
 endFunction
 
 function addFavoritesInChest()
