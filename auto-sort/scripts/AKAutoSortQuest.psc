@@ -4,8 +4,6 @@ Import CassiopeiaPapyrusExtender
 
 SortedChest[] Property TrackedChests Auto
 ExactMatchChest[] Property ExactMatchChests Auto
-Cell Property NoneCell Auto
-ObjectReference Property NoneChest Auto
 ObjectReference Property selectedChest Auto
 ActorValue Property CarryWeight Auto
 bool Property AddKeyword Auto
@@ -16,9 +14,6 @@ FormList Property CombinedTrackedSortWords Auto
 Armor Property tool Auto Const
 
 struct SortedChest
-      Cell parentCell
-      {Cell the chest is in}
-      
       ObjectReference chest
       {Tracked Chest}
 
@@ -27,9 +22,6 @@ struct SortedChest
 endStruct
 
 struct ExactMatchChest
-      Cell parentCell
-      {Cell the chest is in}
-      
       ObjectReference chest
       {Tracked Chest}
 
@@ -64,14 +56,12 @@ function addContainer(ObjectReference containerToAdd)
   if (chestO != -1)
     Debug.Notification("Chest is tracked as exact match")
   elseif (chestI == -1)
-    int freeSlot = TrackedChests.FindStruct("chest", NoneChest)
+    int freeSlot = TrackedChests.FindStruct("chest", None)
     if (freeSlot == -1)
       Debug.Notification("There are no more slots. Please remove a chest.")
     else
       Actor player = Game.GetPlayer()
-      Cell currentCell = player.GetParentCell()
       SortedChest chest = TrackedChests[freeSlot]
-      chest.parentCell = currentCell
       chest.chest = containerToAdd
       Debug.Notification("Chest is now tracked")
     endif
@@ -86,14 +76,12 @@ function addExactContainer(ObjectReference containerToAdd)
   if (chestO != -1)
     Debug.Notification("Chest is tracked as keyword match")
   elseif (chestI == -1)
-    int freeSlot = ExactMatchChests.FindStruct("chest", NoneChest)
+    int freeSlot = ExactMatchChests.FindStruct("chest", None)
     if (freeSlot == -1)
       Debug.Notification("There are no more slots. Please remove a chest.")
     else
       Actor player = Game.GetPlayer()
-      Cell currentCell = player.GetParentCell()
       ExactMatchChest chest = ExactMatchChests[freeSlot]
-      chest.parentCell = currentCell
       chest.chest = containerToAdd
       updateExactSortItems(chest)
     endif
@@ -122,14 +110,12 @@ function removeContainer(ObjectReference containerToRemove)
   int chestO = ExactMatchChests.FindStruct("chest", containerToRemove)
   if (chestI != -1)
     SortedChest chest = TrackedChests[chestI]
-    chest.parentCell = NoneCell
-    chest.chest = NoneChest
+    chest.chest = None
     chest.sortWords.Revert()
     Debug.Notification("Chest is no longer tracked")
   elseif (chestO != -1)
     ExactMatchChest chest = ExactMatchChests[chestO]
-    chest.parentCell = NoneCell
-    chest.chest = NoneChest
+    chest.chest = None
     chest.sortItems.Revert()
     Debug.Notification("Chest is no longer tracked")
   else
@@ -187,14 +173,20 @@ function sortItems()
   endif
   IsCurrentlySorting = true
   Actor player = Game.GetPlayer()
-  Cell currentCell = player.GetParentCell()
   Form[] items = GetInventoryItems(player, true)
-  Int[] exactChestIndexes = getExactChestIndexesInCell(currentCell)
-  Int[] trackedChestIndexes = getTrackedChestIndexesInCell(currentCell)
+  Int[] exactChestIndexes = getExactChestIndexes()
+  Int[] trackedChestIndexes = getTrackedChestIndexes()
   prepareCombinedTrackedSortWords(trackedChestIndexes)
+  Int sortedCount = 0
   ; Form[] favs = GetPlayerFavoritedForms()
   Int i = items.length
-  Debug.Notification("Sorting " + i + " Items")
+  Form[] combined = CombinedTrackedSortWords.GetArray()
+  if (exactChestIndexes.length == 0 && (combined.length == 0 || trackedChestIndexes.length == 0))
+    Debug.Notification("Found no clues for sorting")
+    IsCurrentlySorting = false
+    return
+  endif
+  Debug.Notification("Sorting " + i + " Items into " + exactChestIndexes.length + " exact and " + trackedChestIndexes.length + " tracked chests (with " + CombinedTrackedSortWords.GetArray().length + " words)")
 
   while (i > 0)
     i -= 1
@@ -281,15 +273,15 @@ bool function hasCapacity(ObjectReference chest, Form item, int count)
   return currentFill + needed <= max
 endFunction
 
-Int[] function getExactChestIndexesInCell(Cell currentCell)
-  int matchCount = countExactChestsInCell(currentCell)
+Int[] function getExactChestIndexes()
+  int matchCount = countExactChests()
   Int[] indexes = new Int[matchCount]
   int sourceIndex = 0
   int matchIndex = 0
   int chestCount = ExactMatchChests.Length
 
   while (sourceIndex < chestCount)
-    if (ExactMatchChests[sourceIndex].parentCell == currentCell)
+    if (ExactMatchChests[sourceIndex].chest != None)
       indexes[matchIndex] = sourceIndex
       matchIndex += 1
     endif
@@ -299,13 +291,13 @@ Int[] function getExactChestIndexesInCell(Cell currentCell)
   return indexes
 endFunction
 
-int function countExactChestsInCell(Cell currentCell)
+int function countExactChests()
   int sourceIndex = 0
   int matchCount = 0
   int chestCount = ExactMatchChests.Length
 
   while (sourceIndex < chestCount)
-    if (ExactMatchChests[sourceIndex].parentCell == currentCell)
+    if (ExactMatchChests[sourceIndex].chest != None)
       matchCount += 1
     endif
     sourceIndex += 1
@@ -314,15 +306,15 @@ int function countExactChestsInCell(Cell currentCell)
   return matchCount
 endFunction
 
-Int[] function getTrackedChestIndexesInCell(Cell currentCell)
-  int matchCount = countTrackedChestsInCell(currentCell)
+Int[] function getTrackedChestIndexes()
+  int matchCount = countTrackedChests()
   Int[] indexes = new Int[matchCount]
   int sourceIndex = 0
   int matchIndex = 0
   int chestCount = TrackedChests.Length
 
   while (sourceIndex < chestCount)
-    if (TrackedChests[sourceIndex].parentCell == currentCell)
+    if (TrackedChests[sourceIndex].chest != None)
       indexes[matchIndex] = sourceIndex
       matchIndex += 1
     endif
@@ -332,13 +324,13 @@ Int[] function getTrackedChestIndexesInCell(Cell currentCell)
   return indexes
 endFunction
 
-int function countTrackedChestsInCell(Cell currentCell)
+int function countTrackedChests()
   int sourceIndex = 0
   int matchCount = 0
   int chestCount = TrackedChests.Length
 
   while (sourceIndex < chestCount)
-    if (TrackedChests[sourceIndex].parentCell == currentCell)
+    if (TrackedChests[sourceIndex].chest != None)
       matchCount += 1
     endif
     sourceIndex += 1
