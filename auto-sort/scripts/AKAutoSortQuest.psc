@@ -177,9 +177,10 @@ function sortItems()
   Int[] exactChestIndexes = getExactChestIndexes()
   Int[] trackedChestIndexes = getTrackedChestIndexes()
   prepareCombinedTrackedSortWords(trackedChestIndexes)
-  Int sortedCount = 0
   ; Form[] favs = GetPlayerFavoritedForms()
+  Int sortedCount = 0
   Int i = items.length
+
   Form[] combined = CombinedTrackedSortWords.GetArray()
   if (exactChestIndexes.length == 0 && (combined.length == 0 || trackedChestIndexes.length == 0))
     Debug.Notification("Found no clues for sorting")
@@ -191,51 +192,28 @@ function sortItems()
   while (i > 0)
     i -= 1
     Form item = items[i]
-    ; && !ArrayContainsForm(favs, item)
     if (item != tool && !player.IsEquipped(item) && !ExcludeList.HasForm(item))
-      sortItem(player, item, i, exactChestIndexes, trackedChestIndexes)
+      bool sorted = sortItem(player, item, i, exactChestIndexes, trackedChestIndexes)
+      if (sorted)
+        sortedCount += 1
+      endif
     endif
   endWhile
 
   float t1 = Utility.GetCurrentRealTime()
   IsCurrentlySorting = false
   Debug.Trace("Sorting took " + (t1 - t0) + " sec")
-  Debug.Notification("Sorting Complete")
+  Debug.Notification("Sorted " + sortedCount + " items")
 EndFunction
 
-bool Function ArrayContainsForm(Form[] forms, Form target)
-    if forms == None || target == None
-        return false
-    endif
-
-    int i = 0
-    while i < forms.Length
-        if forms[i] == target
-            return true
-        endif
-        i += 1
-    endwhile
-
-    return false
-EndFunction
-
-bool Function ArrayContainsInt(Int[] arr, Int value)
-    int i = 0
-    while i < arr.Length
-        if arr[i] == value
-            return true
-        endif
-        i += 1
-    endwhile
-    return false
-EndFunction
-
-function sortItem(Actor player, Form item, int itemIndex, Int[] exactChestIndexes, Int[] trackedChestIndexes)
+bool function sortItem(Actor player, Form item, int itemIndex, Int[] exactChestIndexes, Int[] trackedChestIndexes)
   int count = GetItemStackCount(player, itemIndex)
-  if (!sortItemByExact(player, item, count, exactChestIndexes))
-    if (item.HasKeywordInFormList(CombinedTrackedSortWords))
-      sortItemByKeyword(player, item, count, trackedChestIndexes)
-    endif
+  if (sortItemByExact(player, item, count, exactChestIndexes))
+    return true
+  elseif (item.HasKeywordInFormList(CombinedTrackedSortWords))
+      return sortItemByKeyword(player, item, count, trackedChestIndexes)
+  else
+    return false
   endif
 endFunction
 
@@ -246,6 +224,10 @@ bool function sortItemByExact(Actor player, Form item, int count, Int[] exactChe
     ExactMatchChest chest = ExactMatchChests[exactChestIndexes[i]]
     if (chest.sortItems.HasForm(item) && hasCapacity(chest.chest, item, count))
       player.RemoveItem(item, count, true, chest.chest)
+      Actor man = chest.chest as Actor
+      if man != None
+        man.EquipItem(item)
+      endif
       return true
     endif
     i += 1
@@ -253,17 +235,22 @@ bool function sortItemByExact(Actor player, Form item, int count, Int[] exactChe
   return false
 endFunction
 
-function sortItemByKeyword(Actor player, Form item, int count, Int[] trackedChestIndexes)
+bool function sortItemByKeyword(Actor player, Form item, int count, Int[] trackedChestIndexes)
   int i = 0
   int chestCount = trackedChestIndexes.Length
   while (i < chestCount)
     SortedChest chest = TrackedChests[trackedChestIndexes[i]]
     if (item.HasKeywordInFormList(chest.sortWords) && hasCapacity(chest.chest, item, count))
       player.RemoveItem(item, count, true, chest.chest)
-      return
+      Actor man = chest.chest as Actor
+      if man != None
+        man.EquipItem(item)
+      endif
+      return true
     endif
     i += 1
   endWhile
+  return false
 endFunction
 
 bool function hasCapacity(ObjectReference chest, Form item, int count)

@@ -61,7 +61,7 @@ EndFunction
 ;BEGIN FRAGMENT Fragment_TerminalMenu_08
 Function Fragment_TerminalMenu_08(ObjectReference akTerminalRef)
 ;BEGIN CODE
-akQuest.addSelectedContainerAsExactMatch()
+akQuest.removeItemsInChestFromExcludeList()
 ;END CODE
 EndFunction
 ;END FRAGMENT

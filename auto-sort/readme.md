@@ -50,5 +50,8 @@ Does not modify the container itself.
 - Only 20 sort chests and 20 exact chests
 - Currently sorts favorites
 - It can take a while, depending by number of items!
+- Sorts items into all chest in any cell. In my skyrim mod it only looked at chests in the current cell which felt less cheaty. Unfortunately I couldn't replicate the behavior here.
 
 ## Troubleshooting
+- Not sorting an item? Make sure it's not a favorite and not on the exclude list
+- Viewing keywords can potentially fix issues as I reset some cache variables when it's clicked
