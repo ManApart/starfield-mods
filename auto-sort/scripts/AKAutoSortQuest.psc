@@ -268,7 +268,7 @@ Int[] function getExactChestIndexes()
   int chestCount = ExactMatchChests.Length
 
   while (sourceIndex < chestCount)
-    if (ExactMatchChests[sourceIndex].chest != None)
+    if (ExactMatchChests[sourceIndex].chest != None && ExactMatchChests[sourceIndex].chest.Is3DLoaded())
       indexes[matchIndex] = sourceIndex
       matchIndex += 1
     endif
@@ -284,7 +284,7 @@ int function countExactChests()
   int chestCount = ExactMatchChests.Length
 
   while (sourceIndex < chestCount)
-    if (ExactMatchChests[sourceIndex].chest != None)
+    if (ExactMatchChests[sourceIndex].chest != None && ExactMatchChests[sourceIndex].chest.Is3DLoaded())
       matchCount += 1
     endif
     sourceIndex += 1
@@ -301,7 +301,7 @@ Int[] function getTrackedChestIndexes()
   int chestCount = TrackedChests.Length
 
   while (sourceIndex < chestCount)
-    if (TrackedChests[sourceIndex].chest != None)
+    if (TrackedChests[sourceIndex].chest != None && TrackedChests[sourceIndex].chest.Is3DLoaded())
       indexes[matchIndex] = sourceIndex
       matchIndex += 1
     endif
@@ -317,7 +317,7 @@ int function countTrackedChests()
   int chestCount = TrackedChests.Length
 
   while (sourceIndex < chestCount)
-    if (TrackedChests[sourceIndex].chest != None)
+    if (TrackedChests[sourceIndex].chest != None && TrackedChests[sourceIndex].chest.Is3DLoaded())
       matchCount += 1
     endif
     sourceIndex += 1
