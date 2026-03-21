@@ -2,14 +2,13 @@
 
 - [ ] Make Machine constructable
 - [ ] Make vial constructable
+  - Blocked: can't assign output of constructable object
 - [ ] Make machine require first research project
 - [ ] BUild out projects
 
 
 Both cures and the machine have different levels
 - level 1 cures lightest, level 4 cures all
-- higher machine needs higher chemistry
-- highest level machine needs special projects
 - higher cures require higher medicine
 
 ; add brain injury (not working for prognosis)
@@ -20,14 +19,7 @@ player.additem 0029a859 10
 player.additem 002f445a 10
 player.getav AFFL_PrognosisAV_Infection_BrainInfection
 
-Since can't see effect on spell, maybe make sure NO prognosis OTHER than excellent
 
-Infection is spell ability: ENV_AFFL_Infection_BoneInfection_1
-Include magic effect prognosis excedllent: 
-ENV_AFFL_Prognosis_Infection_3_Excellent
-ENV_AFFL_Prognosis_Injury_3_Excellent
-
-Items -> Research Project -> Chem_Research_InnovativeSynthesis_01
 
 
 
