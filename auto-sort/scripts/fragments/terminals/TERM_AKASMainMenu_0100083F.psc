@@ -74,5 +74,13 @@ akQuest.addSelectedContainerAsExactMatch()
 EndFunction
 ;END FRAGMENT
 
+;BEGIN FRAGMENT Fragment_TerminalMenu_10
+Function Fragment_TerminalMenu_10(ObjectReference akTerminalRef)
+;BEGIN CODE
+akQuest.addSelectedDrainContainer()
+;END CODE
+EndFunction
+;END FRAGMENT
+
 ;END FRAGMENT CODE - Do not edit anything between this and the begin comment
 AKAutoSortQuest Property akQuest Auto Const

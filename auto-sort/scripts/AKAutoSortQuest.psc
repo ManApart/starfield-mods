@@ -4,6 +4,7 @@ Import CassiopeiaPapyrusExtender
 
 SortedChest[] Property TrackedChests Auto
 ExactMatchChest[] Property ExactMatchChests Auto
+FormList Property DrainChests Auto
 ObjectReference Property selectedChest Auto
 ActorValue Property CarryWeight Auto
 bool Property AddKeyword Auto
@@ -42,6 +43,10 @@ function addSelectedContainerAsExactMatch()
   addExactContainer(selectedChest)
 endFunction
 
+function addSelectedDrainContainer()
+  addDrainContainer(selectedChest)
+endFunction
+
 bool function selectedChestHasSortWord(Keyword word)
   int chestI = TrackedChests.FindStruct("chest", selectedChest)
   if (chestI == -1)
@@ -55,6 +60,8 @@ function addContainer(ObjectReference containerToAdd)
   int chestO = ExactMatchChests.FindStruct("chest", containerToAdd)
   if (chestO != -1)
     Debug.Notification("Chest is tracked as exact match")
+  elseif (DrainChests.HasForm(containerToAdd))
+    Debug.Notification("Chest is tracked as Drain Chest")
   elseif (chestI == -1)
     int freeSlot = TrackedChests.FindStruct("chest", None)
     if (freeSlot == -1)
@@ -75,6 +82,8 @@ function addExactContainer(ObjectReference containerToAdd)
   int chestO = TrackedChests.FindStruct("chest", containerToAdd)
   if (chestO != -1)
     Debug.Notification("Chest is tracked as keyword match")
+  elseif (DrainChests.HasForm(containerToAdd))
+    Debug.Notification("Chest is tracked as Drain Chest")
   elseif (chestI == -1)
     int freeSlot = ExactMatchChests.FindStruct("chest", None)
     if (freeSlot == -1)
@@ -105,6 +114,21 @@ function removeSelectedContainer()
   removeContainer(selectedChest)
 endFunction
 
+function addDrainContainer(ObjectReference containerToAdd)
+  int chestI = ExactMatchChests.FindStruct("chest", containerToAdd)
+  int chestO = TrackedChests.FindStruct("chest", containerToAdd)
+  if (chestI != -1)
+    Debug.Notification("Chest is tracked as exact match")
+  elseif (chestO != -1)
+    Debug.Notification("Chest is tracked as keyword match")
+  elseif (DrainChests.HasForm(containerToAdd))
+    Debug.Notification("Chest is already tracked as drain chest")
+  else
+    DrainChests.AddForm(containerToAdd)
+    Debug.Notification("Drain Chest Added")
+  endif
+EndFunction
+
 function removeContainer(ObjectReference containerToRemove)
   int chestI = TrackedChests.FindStruct("chest", containerToRemove)
   int chestO = ExactMatchChests.FindStruct("chest", containerToRemove)
@@ -112,12 +136,15 @@ function removeContainer(ObjectReference containerToRemove)
     SortedChest chest = TrackedChests[chestI]
     chest.chest = None
     chest.sortWords.Revert()
-    Debug.Notification("Chest is no longer tracked")
+    Debug.Notification("Tracked Chest is no longer tracked")
   elseif (chestO != -1)
     ExactMatchChest chest = ExactMatchChests[chestO]
     chest.chest = None
     chest.sortItems.Revert()
-    Debug.Notification("Chest is no longer tracked")
+    Debug.Notification("Exact Chest is no longer tracked")
+  elseif (DrainChests.HasForm(containerToRemove))
+    DrainChests.RemoveAddedForm(containerToRemove)
+    Debug.Notification("Drain Chest is no longer tracked")
   else
     Debug.Notification("Chest is not tracked")
   endif
@@ -166,6 +193,20 @@ function removeSortWords(SortedChest chest, Keyword word)
 EndFunction
 
 function sortItems()
+  Form[] chests = DrainChests.GetArray()
+  Int i = 0
+  while (i < chests.length)
+    ObjectReference chest = chests[i] as ObjectReference
+    if chest.is3dLoaded() && chest.GetItemCount() > 0
+      sortChestItems(chest)
+      return
+    endif
+    i +=1
+  endwhile
+  sortPlayerItems()
+endFunction
+
+function sortPlayerItems()
   float t0 = Utility.GetCurrentRealTime()
   if (IsCurrentlySorting == true)
     Debug.Notification("Already doing a sort!")
@@ -187,7 +228,7 @@ function sortItems()
     IsCurrentlySorting = false
     return
   endif
-  Debug.Notification("Sorting " + i + " Items into " + exactChestIndexes.length + " exact and " + trackedChestIndexes.length + " tracked chests (with " + CombinedTrackedSortWords.GetArray().length + " words)")
+  Debug.Notification("Sorting " + i + " Items from player into " + exactChestIndexes.length + " exact and " + trackedChestIndexes.length + " tracked chests (with " + CombinedTrackedSortWords.GetArray().length + " words)")
 
   while (i > 0)
     i -= 1
@@ -206,24 +247,64 @@ function sortItems()
   Debug.Notification("Sorted " + sortedCount + " items")
 EndFunction
 
-bool function sortItem(Actor player, Form item, int itemIndex, Int[] exactChestIndexes, Int[] trackedChestIndexes)
-  int count = GetItemStackCount(player, itemIndex)
-  if (sortItemByExact(player, item, count, exactChestIndexes))
+
+function sortChestItems(ObjectReference source)
+  float t0 = Utility.GetCurrentRealTime()
+  if (IsCurrentlySorting == true)
+    Debug.Notification("Already doing a sort!")
+    return
+  endif
+  IsCurrentlySorting = true
+  Form[] items = GetInventoryItems(source, true)
+  Int[] exactChestIndexes = getExactChestIndexes()
+  Int[] trackedChestIndexes = getTrackedChestIndexes()
+  prepareCombinedTrackedSortWords(trackedChestIndexes)
+  Int sortedCount = 0
+  Int i = items.length
+
+  Form[] combined = CombinedTrackedSortWords.GetArray()
+  if (exactChestIndexes.length == 0 && (combined.length == 0 || trackedChestIndexes.length == 0))
+    Debug.Notification("Found no clues for sorting")
+    IsCurrentlySorting = false
+    return
+  endif
+  Debug.Notification("Sorting " + i + " Items from Drain into " + exactChestIndexes.length + " exact and " + trackedChestIndexes.length + " tracked chests (with " + CombinedTrackedSortWords.GetArray().length + " words)")
+
+  while (i > 0)
+    i -= 1
+    Form item = items[i]
+    if (item != tool && !ExcludeList.HasForm(item))
+      bool sorted = sortItem(source, item, i, exactChestIndexes, trackedChestIndexes)
+      if (sorted)
+        sortedCount += 1
+      endif
+    endif
+  endWhile
+
+  float t1 = Utility.GetCurrentRealTime()
+  IsCurrentlySorting = false
+  Debug.Trace("Sorting took " + (t1 - t0) + " sec")
+  Debug.Notification("Sorted " + sortedCount + " items")
+EndFunction
+
+bool function sortItem(ObjectReference source, Form item, int itemIndex, Int[] exactChestIndexes, Int[] trackedChestIndexes)
+  int count = GetItemStackCount(source, itemIndex)
+  if (sortItemByExact(source, item, count, exactChestIndexes))
     return true
   elseif (item.HasKeywordInFormList(CombinedTrackedSortWords))
-      return sortItemByKeyword(player, item, count, trackedChestIndexes)
+      return sortItemByKeyword(source, item, count, trackedChestIndexes)
   else
     return false
   endif
 endFunction
 
-bool function sortItemByExact(Actor player, Form item, int count, Int[] exactChestIndexes)
+bool function sortItemByExact(ObjectReference source, Form item, int count, Int[] exactChestIndexes)
   int i = 0
   int chestCount = exactChestIndexes.Length
   while (i < chestCount)
     ExactMatchChest chest = ExactMatchChests[exactChestIndexes[i]]
     if (chest.sortItems.HasForm(item) && hasCapacity(chest.chest, item, count))
-      player.RemoveItem(item, count, true, chest.chest)
+      source.RemoveItem(item, count, true, chest.chest)
       Actor man = chest.chest as Actor
       if man != None
         man.EquipItem(item)
@@ -235,13 +316,13 @@ bool function sortItemByExact(Actor player, Form item, int count, Int[] exactChe
   return false
 endFunction
 
-bool function sortItemByKeyword(Actor player, Form item, int count, Int[] trackedChestIndexes)
+bool function sortItemByKeyword(ObjectReference source, Form item, int count, Int[] trackedChestIndexes)
   int i = 0
   int chestCount = trackedChestIndexes.Length
   while (i < chestCount)
     SortedChest chest = TrackedChests[trackedChestIndexes[i]]
     if (item.HasKeywordInFormList(chest.sortWords) && hasCapacity(chest.chest, item, count))
-      player.RemoveItem(item, count, true, chest.chest)
+      source.RemoveItem(item, count, true, chest.chest)
       Actor man = chest.chest as Actor
       if man != None
         man.EquipItem(item)
