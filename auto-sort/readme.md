@@ -9,7 +9,7 @@ Does not modify the container itself.
 - Sort items into chests with the press of a button
 - Pick from a large selection of keywords
 - Don't sort equipped items
-- 
+- Sort "exact" chests to equip mannequins etc
 
 
 ### Exact Sort Items
@@ -20,7 +20,7 @@ Does not modify the container itself.
 
 
 ## Setup
-- On game load you'll receive a "Sort Tool" (check appraal).
+- On game load you'll receive a "Sort Tool" (check apparel).
 - The sort tool has two functions
   - On "equip", it sorts your items
   - On add to a chest, it opens the chest configuration terminal and returns to your inventory
@@ -42,9 +42,18 @@ Does not modify the container itself.
 - All items currently in the chest will be saved to a list
 - During sorting, items that match that list will be deposited in that chest
 
+### Drain Sorting
+- The slowest part of the mod is going through a large inventory. To speed that up, you can use a Drain Chest
+- Mark a chest as a "Drain Chest" with the sort tool
+- Now when you sort, the tool finds the first Drain Chest that is loaded and has items
+- It then sorts items from that chest instead of the player
+- If no chests with items found, it still sorts from player inventory
+- Use this to quickly dump items and then have them sorted into your desired tag and exact chests
+
 ### Other
 - You can add items to an exclusion list. These items will be ignored for sorting
-- TODO - you can mass favorite items (even if you're out of favorite buttons)
+- you can mass favorite items (even if you're out of favorite buttons)
+  - To do so, add items you want favorited to a chest, then add the sort tool to the chest and "favorite items"
 
 ## Limitations
 - Only 20 sort chests and 20 exact chests
