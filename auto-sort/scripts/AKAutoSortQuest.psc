@@ -215,6 +215,10 @@ function sortPlayerItems()
   IsCurrentlySorting = true
   Actor player = Game.GetPlayer()
   Form[] items = GetInventoryItems(player, true)
+  if (items.length == 0)
+    Debug.Notification("No items found. Is Cassiopeia installed correctly?")
+    return
+  endif
   Int[] exactChestIndexes = getExactChestIndexes()
   Int[] trackedChestIndexes = getTrackedChestIndexes()
   prepareCombinedTrackedSortWords(trackedChestIndexes)
@@ -256,6 +260,10 @@ function sortChestItems(ObjectReference source)
   endif
   IsCurrentlySorting = true
   Form[] items = GetInventoryItems(source, true)
+  if (items.length == 0)
+    Debug.Notification("No items found. Is Cassiopeia installed correctly?")
+    return
+  endif
   Int[] exactChestIndexes = getExactChestIndexes()
   Int[] trackedChestIndexes = getTrackedChestIndexes()
   prepareCombinedTrackedSortWords(trackedChestIndexes)
