@@ -11,6 +11,7 @@ Does not modify the container itself.
 - Don't sort equipped items
 - Sort "exact" chests to equip mannequins etc
 
+See this [Demo Video](https://youtu.be/6UK8mkEd_sc) for visual examples
 
 ### Exact Sort Items
 
@@ -58,8 +59,11 @@ Does not modify the container itself.
 ## Limitations
 - Only 20 sort chests and 20 exact chests
 - Currently sorts favorites (use exclude lists to not store your favorites)
-- It can take a while, depending by number of items!
+- It can take a while, depending by number of items! (Using a drain chest helps by not sorting unneeded items).
 
 ## Troubleshooting
+- Cassiopeia Script Extender is necessary to iterate through items. If Auto Sort isn't finding items, make sure you have the dependencies installed correctly
 - Not sorting an item? Make sure it's not a favorite and not on the exclude list
 - Viewing keywords can potentially fix issues as I reset some cache variables when it's clicked
+
+Source Code can be [found on github](https://github.com/ManApart/starfield-mods)

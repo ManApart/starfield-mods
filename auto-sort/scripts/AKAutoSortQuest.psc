@@ -32,7 +32,10 @@ endStruct
 
 function setSelectedChest(ObjectReference chest)
   selectedChest = chest
-  selectedChestIsTracked = TrackedChests.FindStruct("chest", selectedChest) != -1
+  bool trackedExact = ExactMatchChests.FindStruct("chest", chest) != -1
+  bool trackedKeyword = TrackedChests.FindStruct("chest", chest) != -1
+  bool trackedDrain = DrainChests.HasForm(chest)
+  selectedChestIsTracked = trackedExact || trackedKeyword || trackedDrain
 endFunction
 
 function addSelectedContainer()
