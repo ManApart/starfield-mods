@@ -2,13 +2,13 @@
 
 - [ ] Make Machine constructable
 - [ ] Make vial constructable
-  - Blocked: can't assign output of constructable object
+  - Blocked: can't assign output of constructable object: Use xedit
 - [ ] Make machine require first research project
 - [ ] BUild out projects
 
 
 Both cures and the machine have different levels
-- level 1 cures lightest, level 4 cures all
+- level 1 cures lightest, level 3 reduces to level 2 if possible, else cures all
 - higher cures require higher medicine
 
 ; add brain injury (not working for prognosis)
@@ -20,16 +20,14 @@ player.additem 002f445a 10
 player.getav AFFL_PrognosisAV_Infection_BrainInfection
 
 
-
-
-
 ## Research Projects
 
 Name | Projects | Perks | Items
 --- | --- | --- | ---
-BioMechanics | | Skill_Robotics 1, Skill_Medicine 1 |
-BioMechanics 2 | | Skill_Robotics 2, Skill_Medicine 2, Skill_Chemistry 2 |
-BioMechanics 3 | | Skill_Robotics 4, Skill_SpecialProjects 2, Skill_Medicine 4 |
+BioMechanics | | Skill_Robotics 1, Skill_Medicine 1 | ScienceGlass_Vial03Closed01Full04 x5, Syringes_01 x5, MedicalScalpel x2
+BioMechanics 2 | BioMechanics | Skill_Robotics 2, Skill_Medicine 2, Skill_Chemistry 2 |
+BioMechanics 3 | BioMechanics 2 | Skill_Robotics 4, Skill_SpecialProjects 4, Skill_Medicine 4, Skill_Chemistry 4 |
+Scientific Production | BioMechanics | Skill_SpecialProjects 2 | Swabs01A x1, KidneyDish01_Base , SurgicalBowl01 x1
 Neuroptimization | BioMechanics | |
 Neuroptimization 2 | Neuroptimization | |
 Neuroptimization 3 | Neuroptimization 2 | |
@@ -68,6 +66,8 @@ All cures require `ScienceGlass_Vial02` in addition to items in the table
 Result | Project | Items
 --- | --- | --
 Injector 1 | BioMechanics | Microscope01
+Injector 2 | BioMechanics 2 |
+Injector 3 | BioMechanics 3 |
 Cure - Bone Infection | Osteology |
 Cure - Bone Infection 2 | Osteology |
 Cure - Bone Infection 3 | Osteology |

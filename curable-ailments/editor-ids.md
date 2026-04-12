@@ -118,3 +118,8 @@ ENV_AFFL_Injury_Sprain_3
 ENV_AFFL_Injury_TornMuscle_1
 ENV_AFFL_Injury_TornMuscle_2
 ENV_AFFL_Injury_TornMuscle_3
+
+## Possible Useful Items
+RobotMachinePart01
+FFKeyZ02_MedicalSupplies
+Mfg_Tier03_SubstrateMolecularSieve
