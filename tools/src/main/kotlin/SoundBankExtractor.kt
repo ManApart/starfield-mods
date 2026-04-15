@@ -9,7 +9,7 @@ import java.nio.file.Files
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 private class Wrapper(
-    @JsonProperty("SoundBanksInfo") val soundBanksInfo: SoundBankInfo,
+    @JsonProperty("SoundBanksInfo") val soundBanksInfo: SoundBankInfo
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -20,7 +20,8 @@ private class SoundBankInfo(
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 private class SoundBank(
-    @JsonProperty("IncludedEvents") val includedEvent: List<IncludedEvent> = listOf()
+    @JsonProperty("IncludedEvents") val includedEvent: List<IncludedEvent> = listOf(),
+    @JsonProperty("ReferencedStreamedFiles") val referencedStreamedFiles: List<StreamedFile> = listOf()
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -52,6 +53,7 @@ private fun moveFiles(source: File, destination: File) {
     println("Parsed ${sounds.size} files")
 
     var processed = 0
+    var missed = 0
     runBlocking {
         sounds.take(LIMIT).chunked(CHUNK_SIZE).forEach { chunk ->
             chunk.map { sound ->
@@ -62,13 +64,14 @@ private fun moveFiles(source: File, destination: File) {
 //                        println("$source\n\t$target")
                     if (!source.exists()) {
                         println("Skipping ${sound.shortName}; source missing")
+                        missed++
                     } else if (!target.exists()) {
                         Files.copy(source.toPath(), target.toPath())
                     }
                 }
             }.awaitAll()
             processed += chunk.size
-            println("Processed $processed/${sounds.size}")
+            println("Processed $processed/${sounds.size}. Missed $missed")
         }
     }
 }
@@ -76,6 +79,10 @@ private fun moveFiles(source: File, destination: File) {
 private fun parseFileInfo(source: File): List<StreamedFile> {
     val infoFile = File("${source.absolutePath}/soundbanks/soundbanksinfo.json")
     val wrapper: Wrapper = mapper.readValue(infoFile)
-    val allFiles = wrapper.soundBanksInfo.streamedFiles + wrapper.soundBanksInfo.soundBanks.flatMap { bank -> bank.includedEvent.flatMap { it.streamedFiles } }
-    return allFiles.groupBy { it.path }.values.map { it.first() }
+    val info = wrapper.soundBanksInfo
+    val allFiles = info.streamedFiles + info.soundBanks.flatMap { bank ->
+        bank.includedEvent.flatMap { it.streamedFiles } +
+                bank.referencedStreamedFiles
+    }
+    return allFiles.groupBy { it.id }.values.map { it.last() }
 }
