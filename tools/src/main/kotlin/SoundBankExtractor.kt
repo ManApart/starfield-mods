@@ -63,7 +63,7 @@ private fun moveFiles(source: File, destination: File) {
                         .also { it.parentFile.mkdirs() }
 //                        println("$source\n\t$target")
                     if (!source.exists()) {
-                        println("Skipping ${sound.shortName}; source missing")
+                        println("Skipping ${sound.id} ${sound.shortName}; source missing")
                         missed++
                     } else if (!target.exists()) {
                         Files.copy(source.toPath(), target.toPath())
