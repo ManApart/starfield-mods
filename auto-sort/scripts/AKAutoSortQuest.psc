@@ -299,7 +299,7 @@ function sortChestItems(ObjectReference source)
 EndFunction
 
 bool function sortItem(ObjectReference source, Form item, int itemIndex, Int[] exactChestIndexes, Int[] trackedChestIndexes)
-  int count = GetItemStackCount(source, itemIndex)
+  int count = source.GetItemCount(item)
   if (sortItemByExact(source, item, count, exactChestIndexes))
     return true
   elseif (item.HasKeywordInFormList(CombinedTrackedSortWords))
