@@ -444,7 +444,7 @@ function addFavoritesInChest()
   while (i > 0)
     i -= 1
     Form item = items[i]
-    int count = GetItemStackCount(selectedChest, i)
+    int count = selectedChest.GetItemCount(item)
     selectedChest.RemoveItem(item, count, true, player)
     player.MarkItemAsFavorite(item)
   endWhile
@@ -460,7 +460,7 @@ function addItemsInChestToExcludeList()
   while (i > 0)
     i -= 1
     Form item = items[i]
-    int count = GetItemStackCount(selectedChest, i)
+    int count = selectedChest.GetItemCount(item)
     selectedChest.RemoveItem(item, count, true, player)
     ExcludeList.addForm(item)
   endWhile
@@ -476,7 +476,7 @@ function removeItemsInChestFromExcludeList()
   while (i > 0)
     i -= 1
     Form item = items[i]
-    int count = GetItemStackCount(selectedChest, i)
+    int count = selectedChest.GetItemCount(item)
     selectedChest.RemoveItem(item, count, true, player)
     ExcludeList.removeAddedForm(item)
   endWhile
