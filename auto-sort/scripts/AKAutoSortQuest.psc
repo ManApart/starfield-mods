@@ -225,7 +225,7 @@ function sortPlayerItems()
   Int[] exactChestIndexes = getExactChestIndexes()
   Int[] trackedChestIndexes = getTrackedChestIndexes()
   prepareCombinedTrackedSortWords(trackedChestIndexes)
-  ; Form[] favs = GetPlayerFavoritedForms()
+  Form[] favs = GetFavorites()
   Int sortedCount = 0
   Int i = items.length
 
@@ -240,7 +240,7 @@ function sortPlayerItems()
   while (i > 0)
     i -= 1
     Form item = items[i]
-    if (item != tool && !player.IsEquipped(item) && !ExcludeList.HasForm(item))
+    if (item != tool && !ArrayContainsForm(favs, item) && !player.IsEquipped(item) && !ExcludeList.HasForm(item))
       bool sorted = sortItem(player, item, i, exactChestIndexes, trackedChestIndexes)
       if (sorted)
         sortedCount += 1
@@ -483,3 +483,19 @@ function removeItemsInChestFromExcludeList()
 
   Debug.Notification("Un-Excluded " + items.length + " items")
 endFunction
+
+bool Function ArrayContainsForm(Form[] forms, Form target)
+    if forms == None || target == None
+        return false
+    endif
+
+    int i = 0
+    while i < forms.Length
+        if forms[i] == target
+            return true
+        endif
+        i += 1
+    endwhile
+
+    return false
+EndFunction
