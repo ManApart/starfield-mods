@@ -235,28 +235,86 @@ function sortItemsFrom(ObjectReference source)
     IsCurrentlySorting = false
     return
   endif
-  Debug.Notification("Sorting " + i + " Items into " + exactChestIndexes.length + " exact and " + trackedChestIndexes.length + " tracked chests (with " + CombinedTrackedSortWords.GetArray().length + " words)")
 
   Form[] favs = GetFavorites()
 
+  sortExactChestItems(exactChestIndexes, items, source, player, favs, isPlayer)
+  sortKeywordChestItems(trackedChestIndexes, items, source, player, favs, isPlayer)
+
+  float t1 = Utility.GetCurrentRealTime()
+  IsCurrentlySorting = false
+  Debug.Trace("Sorting took " + (t1 - t0) + " sec")
+EndFunction
+
+function sortExactChestItems(Int[] exactChestIndexes, Form[] inventory, ObjectReference source, Actor player, Form[] favs, bool isPlayer)
+  Int sortedCount = 0
+  int chestI = 0
+  int chestCount = exactChestIndexes.Length
+
+  if (chestCount == 0)
+    return
+  endif
+
+  Debug.Notification("Sorting " + inventory.length + " Items into " + exactChestIndexes.length + " exact chests")
+
+  while (chestI < chestCount)
+    ExactMatchChest chest = ExactMatchChests[exactChestIndexes[chestI]]
+    Form[] chestItems = chest.sortItems.GetArray()
+    int chestItemI = 0
+    int chestItemCount = chestItems.length
+    while (chestItemI < chestItemCount)
+      Form item = chestItems[chestItemI]
+      if (item != none && item != tool && !ExcludeList.HasForm(item))
+        int i = IndexOf(inventory, item)
+        if (i != -1 && (!isPlayer || (!ArrayContainsForm(favs, item) && !player.IsEquipped(item))))
+          int count = source.GetItemCount(item)
+          if (hasCapacity(chest.chest, item, count))
+            source.RemoveItem(item, count, true, chest.chest)
+            inventory[i] = none
+            sortedCount += 1
+            Actor man = chest.chest as Actor
+            if man != None
+              man.EquipItem(item)
+            endif
+          endif
+        endif
+      endif
+
+      chestItemI += 1
+    endWhile
+
+    chestI += 1
+  endWhile
+
+  Debug.Notification("Sorted " + sortedCount + " exact items")
+endFunction
+
+
+function sortKeywordChestItems(Int[] trackedChestIndexes, Form[] items, ObjectReference source, Actor player, Form[] favs, bool isPlayer)
+  if (trackedChestIndexes.length == 0)
+    return
+  endif
+
+  Debug.Notification("Sorting " + items.length + " Items into " + trackedChestIndexes.length + " tracked chests (with " + CombinedTrackedSortWords.GetArray().length + " words)")
+  Int sortedCount = 0
+  Int i = items.length
   while (i > 0)
     i -= 1
     Form item = items[i]
-    if (item != tool && !ExcludeList.HasForm(item))
+    if (item != none && item != tool && !ExcludeList.HasForm(item) && item.HasKeywordInFormList(CombinedTrackedSortWords))
       if (!isPlayer || (!ArrayContainsForm(favs, item) && !player.IsEquipped(item)))
-        bool sorted = sortItem(source, item, i, exactChestIndexes, trackedChestIndexes)
+        int count = source.GetItemCount(item)
+        bool sorted = sortItemByKeyword(source, item, count, trackedChestIndexes)
         if (sorted)
           sortedCount += 1
+          items[i] = none
         endif
       endif
     endif
   endWhile
 
-  float t1 = Utility.GetCurrentRealTime()
-  IsCurrentlySorting = false
-  Debug.Trace("Sorting took " + (t1 - t0) + " sec")
-  Debug.Notification("Sorted " + sortedCount + " items")
-EndFunction
+  Debug.Notification("Sorted " + sortedCount + " keyword items")
+endFunction
 
 
 bool function sortItem(ObjectReference source, Form item, int itemIndex, Int[] exactChestIndexes, Int[] trackedChestIndexes)
@@ -446,17 +504,21 @@ function removeItemsInChestFromExcludeList()
 endFunction
 
 bool Function ArrayContainsForm(Form[] forms, Form target)
+    return IndexOf(forms, target) != -1
+EndFunction
+
+int Function IndexOf(Form[] forms, Form target)
     if forms == None || target == None
-        return false
+        return -1
     endif
 
     int i = 0
     while i < forms.Length
         if forms[i] == target
-            return true
+            return i
         endif
         i += 1
     endwhile
 
-    return false
+    return -1
 EndFunction
