@@ -13,6 +13,8 @@ bool Property IsCurrentlySorting Auto
 Formlist Property ExcludeList Auto
 FormList Property CombinedTrackedSortWords Auto
 Armor Property tool Auto Const
+;0 = exact, 1 = keyword, 2 = drain
+Int Property UnTrackKind Auto
 
 struct SortedChest
       ObjectReference chest
@@ -36,6 +38,10 @@ function setSelectedChest(ObjectReference chest)
   bool trackedKeyword = TrackedChests.FindStruct("chest", chest) != -1
   bool trackedDrain = DrainChests.HasForm(chest)
   selectedChestIsTracked = trackedExact || trackedKeyword || trackedDrain
+endFunction
+
+function setUntrackKind(int kind)
+  UnTrackKind = kind
 endFunction
 
 function addSelectedContainer()
@@ -153,15 +159,61 @@ function removeContainer(ObjectReference containerToRemove)
   endif
 endFunction
 
+function removeIndexedChests()
+  int i = 0
+  while (i<=20)
+    removeIndexedChest2(i, false)
+    i+=1
+  endwhile
+endfunction
+
+function removeIndexedChest(int i)
+  removeIndexedChest2(i, true)
+endfunction
+
+function removeIndexedChest2(int i, bool loud)
+  if (UnTrackKind == 0)
+    ExactMatchChest chest = ExactMatchChests[i]
+    if (chest.chest == none && loud)
+      Debug.notification("No chest at " + i + " in kind " + UnTrackKind)
+    endif
+    chest.chest = None
+    chest.sortItems.Revert()
+    Debug.Notification("Exact Chest "+i+" is no longer tracked")
+  elseif (UnTrackKind == 1)
+    SortedChest chest = TrackedChests[i]
+    if (chest.chest == none && loud)
+      Debug.notification("No chest at " + i + " in kind " + UnTrackKind)
+    endif
+    chest.chest = None
+    chest.sortWords.Revert()
+    Debug.Notification("Tracked Chest "+i+" is no longer tracked")
+  elseif (UnTrackKind == 2)
+    Form chest = DrainChests.GetArray()[i]
+    if (chest == none && loud)
+      Debug.notification("No chest at " + i + " in kind " + UnTrackKind)
+    endif
+    DrainChests.RemoveAddedForm(chest)
+    Debug.Notification("Drain Chest "+i+" is no longer tracked")
+  elseif (loud)
+    Debug.Notification("Chest is not tracked")
+  endif
+  
+endFunction
+
 function printSortWords()
   IsCurrentlySorting = false
   int chestI = TrackedChests.FindStruct("chest", selectedChest)
   int chestO = ExactMatchChests.FindStruct("chest", selectedChest)
   if (chestO != -1)
-    Debug.Notification("Chest matches on exact items")
+    Debug.Notification("Chest "+chestO+" matches on exact items")
+  elseif (DrainChests.HasForm(selectedChest))
+    int i = IndexOf(DrainChests.GetArray(), selectedChest)
+    Debug.Notification("Chest "+i+" is a drain chest")
   elseif (chestI == -1)
     Debug.Notification("Chest is not tracked")
   else
+    Debug.Notification("Chest " + chestI)
     Form[] raw = TrackedChests[chestI].sortWords.GetArray()
     Int i = raw.length
     while (i > 0)
