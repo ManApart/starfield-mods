@@ -201,15 +201,15 @@ function sortItems()
   while (i < chests.length)
     ObjectReference chest = chests[i] as ObjectReference
     if chest.is3dLoaded() && chest.GetItemCount() > 0
-      sortChestItems(chest)
+      sortItemsFrom(chest)
       return
     endif
     i +=1
   endwhile
-  sortPlayerItems()
+  sortItemsFrom(Game.getPlayer())
 endFunction
 
-function sortPlayerItems()
+function sortItemsFrom(ObjectReference source)
   float t0 = Utility.GetCurrentRealTime()
   if (IsCurrentlySorting == true)
     Debug.Notification("Already doing a sort!")
@@ -217,51 +217,7 @@ function sortPlayerItems()
   endif
   IsCurrentlySorting = true
   Actor player = Game.GetPlayer()
-  Form[] items = GetInventoryItems(player, true)
-  if (items.length == 0)
-    Debug.Notification("No items found. Is Cassiopeia installed correctly?")
-    return
-  endif
-  Int[] exactChestIndexes = getExactChestIndexes()
-  Int[] trackedChestIndexes = getTrackedChestIndexes()
-  prepareCombinedTrackedSortWords(trackedChestIndexes)
-  Form[] favs = GetFavorites()
-  Int sortedCount = 0
-  Int i = items.length
-
-  Form[] combined = CombinedTrackedSortWords.GetArray()
-  if (exactChestIndexes.length == 0 && (combined.length == 0 || trackedChestIndexes.length == 0))
-    Debug.Notification("Found no clues for sorting")
-    IsCurrentlySorting = false
-    return
-  endif
-  Debug.Notification("Sorting " + i + " Items from player into " + exactChestIndexes.length + " exact and " + trackedChestIndexes.length + " tracked chests (with " + CombinedTrackedSortWords.GetArray().length + " words)")
-
-  while (i > 0)
-    i -= 1
-    Form item = items[i]
-    if (item != tool && !ArrayContainsForm(favs, item) && !player.IsEquipped(item) && !ExcludeList.HasForm(item))
-      bool sorted = sortItem(player, item, i, exactChestIndexes, trackedChestIndexes)
-      if (sorted)
-        sortedCount += 1
-      endif
-    endif
-  endWhile
-
-  float t1 = Utility.GetCurrentRealTime()
-  IsCurrentlySorting = false
-  Debug.Trace("Sorting took " + (t1 - t0) + " sec")
-  Debug.Notification("Sorted " + sortedCount + " items")
-EndFunction
-
-
-function sortChestItems(ObjectReference source)
-  float t0 = Utility.GetCurrentRealTime()
-  if (IsCurrentlySorting == true)
-    Debug.Notification("Already doing a sort!")
-    return
-  endif
-  IsCurrentlySorting = true
+  bool isPlayer = source == player
   Form[] items = GetInventoryItems(source, true)
   if (items.length == 0)
     Debug.Notification("No items found. Is Cassiopeia installed correctly?")
@@ -279,15 +235,19 @@ function sortChestItems(ObjectReference source)
     IsCurrentlySorting = false
     return
   endif
-  Debug.Notification("Sorting " + i + " Items from Drain into " + exactChestIndexes.length + " exact and " + trackedChestIndexes.length + " tracked chests (with " + CombinedTrackedSortWords.GetArray().length + " words)")
+  Debug.Notification("Sorting " + i + " Items into " + exactChestIndexes.length + " exact and " + trackedChestIndexes.length + " tracked chests (with " + CombinedTrackedSortWords.GetArray().length + " words)")
+
+  Form[] favs = GetFavorites()
 
   while (i > 0)
     i -= 1
     Form item = items[i]
     if (item != tool && !ExcludeList.HasForm(item))
-      bool sorted = sortItem(source, item, i, exactChestIndexes, trackedChestIndexes)
-      if (sorted)
-        sortedCount += 1
+      if (!isPlayer || (!ArrayContainsForm(favs, item) && !player.IsEquipped(item)))
+        bool sorted = sortItem(source, item, i, exactChestIndexes, trackedChestIndexes)
+        if (sorted)
+          sortedCount += 1
+        endif
       endif
     endif
   endWhile
@@ -297,6 +257,7 @@ function sortChestItems(ObjectReference source)
   Debug.Trace("Sorting took " + (t1 - t0) + " sec")
   Debug.Notification("Sorted " + sortedCount + " items")
 EndFunction
+
 
 bool function sortItem(ObjectReference source, Form item, int itemIndex, Int[] exactChestIndexes, Int[] trackedChestIndexes)
   int count = source.GetItemCount(item)

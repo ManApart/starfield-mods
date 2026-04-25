@@ -138,3 +138,8 @@ Cure - Torn Muscle | Kinesiology |
 Cure - Torn Muscle 2 | Kinesiology |
 Cure - Torn Muscle 3 | Kinesiology |
 
+
+
+# Item ideas from game
+
+Molecular extractor
