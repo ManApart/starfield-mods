@@ -1,8 +1,9 @@
 # Curable Ailments
 
-- [ ] Make Machine constructable
-- [ ] Make vial constructable
-  - Blocked: can't assign output of constructable object: Use xedit
+- [x] Make Machine constructable
+- [x] Make vial constructable
+  - Use view in inspector to edit output
+- [x] Test administering cure
 - [ ] Make machine require first research project
 - [ ] BUild out projects
 
