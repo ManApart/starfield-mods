@@ -4,8 +4,15 @@
 - [x] Make vial constructable
   - Use view in inspector to edit output
 - [x] Test administering cure
+- [ ] Only run for first item, not every item
+- [x] label cure 1, cure 2, cure 3
+- [x] High level includes all sub levels
+- [ ] Instead of excellent, allow stable or good
 - [ ] Make machine require first research project
 - [ ] BUild out projects
+- [ ] Don't show craftable objects until they can be built
+
+
 
 
 Both cures and the machine have different levels
