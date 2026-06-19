@@ -21,20 +21,92 @@ Sprain - Immobilizer, Repairing Immobilizer, Anchored Immobilizer
 Torn Muscle - Immobilizer, Repairing Immobilizer, Anchored Immobilizer
 
 ## Perks
-Skill_CellularRegeneration
-Skill_Nutrition
-Skill_PainTolerance
-abDecontamination01
-Skill_EnvironmentalConditioning
-Skill_EnergyWeaponDissipation
-Skill_Wellness
-Skill_Medicine
-Skill_ResearchMethods
-Skill_Botany
-Skill_OutpostEngineering
-Skill_Chemistry
-Skill_SpecialProjects
-Skill_Robotics
+| Editor ID | Name |
+|------------|------|
+| Skill_AneutronicFusion | Aneutronic Fusion |
+| Skill_ArmorPenetration | Armor Penetration |
+| Skill_Astrodynamics | Astrodynamics |
+| Skill_Astrophysics | Astrophysics |
+| Skill_AutomatedWeaponSystems | Automated Weapon Systems |
+| Skill_Ballistics | Ballistics |
+| Skill_BallisticWeaponSystems | Ballistic Weapon Systems |
+| Skill_BoostAssaultTraining | Boost Assault Training |
+| Skill_BoostPackTraining | Boost Pack Training |
+| Skill_Botany | Botany |
+| Skill_Boxing | Boxing |
+| Skill_CellularRegeneration | Cellular Regeneration |
+| Skill_Chemistry | Chemistry |
+| Skill_Commerce | Commerce |
+| Skill_Concealment | Concealment |
+| Skill_Crippling | Crippling |
+| Skill_Deception | Deception |
+| Skill_Decontamination | Decontamination |
+| Skill_Demolitions | Demolitions |
+| Skill_Diplomacy | Diplomacy |
+| Skill_Dueling | Dueling |
+| Skill_EMWeaponSystems | EM Weapon Systems |
+| Skill_EnergyWeaponDissipation | Energy Weapon Dissipation |
+| Skill_EnergyWeaponSystems | Energy Weapon Systems |
+| Skill_EngineSystems | Engine Systems |
+| Skill_EnvironmentalConditioning | Environmental Conditioning |
+| Skill_Fitness | Fitness |
+| Skill_Gastronomy | Gastronomy |
+| Skill_Geology | Geology |
+| Skill_Gymnastics | Gymnastics |
+| Skill_HeavyWeaponCertification | Heavy Weapons Certification |
+| Skill_Incapacitation | Incapacitation |
+| Skill_Instigation | Instigation |
+| Skill_Intimidation | Intimidation |
+| Skill_Isolation | Isolation |
+| Skill_Lasers | Lasers |
+| Skill_Leadership | Leadership |
+| Skill_Manipulation | Manipulation |
+| Skill_Manipulation_InternalNeuroampBonus | Manipulation_InternalNeuroampBonus |
+| Skill_Marksmanship | Marksmanship |
+| Skill_MartialArts | Martial Arts |
+| Skill_Medicine | Medicine |
+| Skill_MissileWeaponSystems | Missile Weapon Systems |
+| Skill_Negotiation | Negotiation |
+| Skill_Neurostrikes | Neurostrikes |
+| Skill_Nutrition | Nutrition |
+| Skill_OutpostEngineering | Outpost Engineering |
+| Skill_OutpostManagement | Outpost Management |
+| Skill_PainTolerance | Pain Tolerance |
+| Skill_ParticleBeams | Particle Beams |
+| Skill_ParticleBeamWeaponSystems | Particle Beam Weapon Systems |
+| Skill_Payloads | Payloads |
+| Skill_Persuasion | Persuasion |
+| Skill_Piloting | Piloting |
+| Skill_PistolCertification | Pistol Certification |
+| Skill_PlanetaryHabitation | Planetary Habitation |
+| Skill_RapidReloading | Rapid Reloading |
+| Skill_Rejuvenation | Rejuvenation |
+| Skill_ResearchMethods | Research Methods |
+| Skill_RifleCertification | Rifle Certification |
+| Skill_Robotics | Robotics |
+| Skill_Scanning | Scanning |
+| Skill_Scavenging | Scavenging |
+| Skill_Security | Security |
+| Skill_Sharpshooting | Sharpshooting |
+| Skill_ShieldSystems | Shield Systems |
+| Skill_ShipCommand | Ship Command |
+| Skill_ShotgunCertification | Shotgun Certification |
+| Skill_SniperCertification | Sniper Certification |
+| Skill_SpacesuitDesign | Spacesuit Design |
+| Skill_SpecialProjects | Special Projects |
+| Skill_StarshipDesign | Starship Design |
+| Skill_StarshipEngineering | Starship Engineering |
+| Skill_Stealth | Stealth |
+| Skill_Surveying | Surveying |
+| Skill_Targeting | Targeting |
+| Skill_TargetingControlSystems | Targeting Control Systems |
+| Skill_TargetingControlSystems_TargetLockedShip | Target Locked Ship |
+| Skill_Theft | Theft |
+| Skill_WeaponEngineering | Weapon Engineering |
+| Skill_WeightLifting | Weight Lifting |
+| Skill_Wellness | Wellness |
+| Skill_Xenosociology | Xenosociology |
+| Skill_Zoology | Zoology |
 
 ## Items
 

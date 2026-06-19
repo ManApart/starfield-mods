@@ -3,7 +3,6 @@ Scriptname AKASCAInjector extends ObjectReference Const
 Int Property Level Auto Const
 MagicEffect[] Property BadPrognosis Auto Const
 Keyword Property AKCACureKeyword Auto Const
-SQ_ENV_AfflictionsScript Property sq_env Auto const
 
 Event OnInit()
   AddInventoryEventFilter(AKCACureKeyword)
@@ -25,14 +24,12 @@ Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemRefere
   Int i = 0
   while (i < BadPrognosis.length)
     if (player.HasMagicEffect(BadPrognosis[i]))
-      Debug.Notification("This procedure requires excellent prognoses for all ailments.")
+      Debug.Notification("This procedure requires stable, good, or excellent prognoses for all ailments.")
       ; Skip check since test auto healing
       ; return
     endif
     i+=1
   endwhile
-
-  Debug.Notification("Administering Cure")
 
   i = 0
   while (i < cure.CureList.length)
