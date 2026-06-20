@@ -191,6 +191,13 @@ ENV_AFFL_Injury_TornMuscle_1
 ENV_AFFL_Injury_TornMuscle_2
 ENV_AFFL_Injury_TornMuscle_3
 
+## Ailment Names:
+Osteomyelitis = Bone Infection
+Encephalitis = Brain Infection
+Gastroenteritis = Intestine Infection
+Pneumonia = Lung Infection
+Cellulitis = Tissue Infection
+
 ## Possible Useful Items
 RobotMachinePart01
 FFKeyZ02_MedicalSupplies

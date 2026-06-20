@@ -11,7 +11,11 @@ EndEvent
 Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemReference, ObjectReference akSourceContainer, int aiTransferReason)
   AKCACure cure = akBaseItem as AKCACure
   if (cure == none)
-    Debug.Notification("Not a cure!")
+    Debug.Notification("Not a cure.")
+    return
+  endif
+  if (aiItemCount != 1)
+    Debug.Notification("Only one cure may be administered at a time.")
     return
   endif
   
@@ -25,8 +29,7 @@ Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemRefere
   while (i < BadPrognosis.length)
     if (player.HasMagicEffect(BadPrognosis[i]))
       Debug.Notification("This procedure requires stable, good, or excellent prognoses for all ailments.")
-      ; Skip check since test auto healing
-      ; return
+      return
     endif
     i+=1
   endwhile
