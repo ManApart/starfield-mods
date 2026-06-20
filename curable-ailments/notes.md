@@ -37,3 +37,39 @@ All cures require `ScienceGlass_Vial02` in addition to items in the table
 # Item ideas from game
 
 Molecular extractor
+
+
+Batch Research Projects
+completeresearch 04000927
+```
+04000927 'Osteology'
+04000928 'Osteology 2'
+04000929 'Osteology 3'
+04000924 'Neuroptimization'
+04000925 'Neuroptimization 2'
+04000926 'Neuroptimization 3'
+0400092C 'Dermatology'
+04000937 'Dermatology 2'
+04000938 'Dermatology 3'
+0400092E 'Traumatology '
+04000940 'Traumatology 2'
+04000942 'Traumatology 3'
+0400092D 'Thermoregulation'
+0400093D 'Thermoregulation 2'
+0400093E 'Thermoregulation 3'
+0400092A 'Gastroenterology'
+04000939 'Gastroenterology 2'
+0400093A 'Gastroenterology 3'
+0400092B 'Pulmonology '
+0400093B 'Pulmonology 2'
+0400093C 'Pulmonology 3'
+0400092F 'Toxicology '
+0400093F 'Toxicology 2'
+04000941 'Toxicology 3'
+040008C6 'BioMechanics'
+04000912 'BioMechanics 2'
+04000913 'BioMechanics 3'
+04000936 'Kinesiology'
+04000943 'Kinesiology 2'
+04000944 'Kinesiology 3'
+```
