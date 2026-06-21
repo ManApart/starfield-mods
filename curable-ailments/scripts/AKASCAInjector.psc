@@ -1,7 +1,6 @@
 Scriptname AKASCAInjector extends ObjectReference Const
 
 Int Property Level Auto Const
-MagicEffect[] Property BadPrognosis Auto Const
 Keyword Property AKCACureKeyword Auto Const
 
 Event OnInit()
@@ -20,27 +19,23 @@ Event OnItemAdded(Form akBaseItem, int aiItemCount, ObjectReference akItemRefere
   endif
   
   if (cure.Level > Level)
-    Debug.Notification("Cure is too sophisticated to administer.")
+    Debug.Notification("Cure is too sophisticated to administer with current device.")
     return
   endif
 
-  Actor player = Game.getPlayer()
   Int i = 0
-  while (i < BadPrognosis.length)
-    if (player.HasMagicEffect(BadPrognosis[i]))
-      Debug.Notification("This procedure requires stable, good, or excellent prognoses for all ailments.")
-      return
-    endif
-    i+=1
-  endwhile
-
-  i = 0
+  Actor player = Game.getPlayer()
   while (i < cure.CureList.length)
     Spell ailment = cure.CureList[i]
     if (player.HasSpell(ailment))
+      if (player.GetValueInt(cure.Prognosis) == 0)
+        Debug.Notification("This procedure requires the affliction to be at least stable prognoses.")
+        return
+      endif
+
       player.RemoveSpell(ailment)
       self.removeItem(cure)
-      Debug.Notification(ailment + " has been cured")
+      Debug.Notification("Procedure successful.")
       return
     endif
   i +=1
