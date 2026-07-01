@@ -67,11 +67,17 @@ Function Fragment_Stage_0215_Item_00()
   Self.setstage(250) ; #DEBUG_LINE_NO:85
   Self.SetObjectiveDisplayed(200, False, False) ; #DEBUG_LINE_NO:86
   LetTargetGo.Mod(1.0) ; #DEBUG_LINE_NO:89
+  Debug.Notification("Killed: " + KillCount.GetValue() + " Escaped: " + LetTargetGo.GetValue())
+  If KillCount.GetValue() + LetTargetGo.GetValue() >= 10.0 ; #DEBUG_LINE_NO:101
+    Game.AddAchievement(78) ; #DEBUG_LINE_NO:102
+  EndIf
 EndFunction
 
 Function Fragment_Stage_0225_Item_00()
   KillCount.Mod(1.0) ; #DEBUG_LINE_NO:98
-  If KillCount.GetValue() >= 10.0 ; #DEBUG_LINE_NO:101
+  ;Sum kills and let gos
+  Debug.Notification("Killed: " + KillCount.GetValue() + " Escaped: " + LetTargetGo.GetValue())
+  If KillCount.GetValue() + LetTargetGo.GetValue() >= 10.0 ; #DEBUG_LINE_NO:101
     Game.AddAchievement(78) ; #DEBUG_LINE_NO:102
   EndIf
   Self.SetObjectiveDisplayed(225, True, False) ; #DEBUG_LINE_NO:106
