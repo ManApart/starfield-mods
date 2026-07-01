@@ -87,6 +87,10 @@ SetObjectiveDisplayed(200,0)
 
 ;mod the TargetLetGo global
 LetTargetGo.Mod(1)
+Debug.Notification("Killed: " + KillCount.GetValue() + " Escaped: " + LetTargetGo.GetValue())
+If KillCount.GetValue() + LetTargetGo.GetValue() >= 10.0
+    Game.AddAchievement(78)
+EndIf
 ;END CODE
 EndFunction
 ;END FRAGMENT
@@ -98,9 +102,10 @@ Function Fragment_Stage_0225_Item_00()
 KillCount.Mod(1)
 
 ;if player killed 10 targets, give them the achievement
-if KillCount.GetValue() >= 10
+Debug.Notification("Killed: " + KillCount.GetValue() + " Escaped: " + LetTargetGo.GetValue())
+If KillCount.GetValue() + LetTargetGo.GetValue() >= 10.0
   Game.AddAchievement(78)
-endif
+EndIf
 
 ;handle objectives
 SetObjectiveDisplayed(225)
