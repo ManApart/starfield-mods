@@ -13,7 +13,10 @@ FLAGS="$GAME/Data/scripts/source/Starfield_Papyrus_Flags.flg"
 IMPORT_DIR="$GAME/Data/scripts/source"
 OUT_DIR="$GAME/Data/scripts"
 
-PSC_LINUX="$(realpath "${1:?Usage: $0 /path/to/script.psc}")"
+PSC_LINUX="${1:?Usage: $0 /path/to/script.psc}"
+if [[ "$PSC_LINUX" != /* ]]; then
+  PSC_LINUX="$PWD/$PSC_LINUX"
+fi
 
 to_z() { echo "Z:${1//\//\\}"; }
 
