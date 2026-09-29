@@ -15,6 +15,7 @@ FormList Property CombinedTrackedSortWords Auto
 Armor Property tool Auto Const
 ;0 = exact, 1 = keyword, 2 = drain
 Int Property UnTrackKind Auto
+Keyword[] Property AllKeywords Auto Const
 
 struct SortedChest
       ObjectReference chest
@@ -574,3 +575,76 @@ int Function IndexOf(Form[] forms, Form target)
 
     return -1
 EndFunction
+
+Function printKeywords()
+  int i = 0
+  PrintToConsoleLog("==All Keywords==")
+  while i < AllKeywords.Length
+    Keyword word = AllKeywords[i]
+    i += 1
+    PrintToConsoleLog(GetHexFormID(word) + " " + keywordString(word))
+  endwhile
+
+endfunction
+
+string function keywordString(Keyword word)
+  string wordName = GetTESFullName(word)
+
+  if wordName == ""
+      wordName = GetKeywordLinkageName(word)
+  endif
+
+  if wordName == ""
+      wordName =  CassiopeiaPapyrusExtender.GetFormEditorID(word)
+  endif
+
+  return wordName
+endfunction
+
+Function printKeywordChests()
+    int chestIndex = 0
+
+    while chestIndex < TrackedChests.Length
+        SortedChest chest = TrackedChests[chestIndex]
+
+        if chest.chest != None
+            string chestName = GetReferenceName(chest.chest)
+
+            if chestName == ""
+                chestName =  CassiopeiaPapyrusExtender.GetFormEditorID(chest.chest)
+            endif
+
+            PrintToConsoleLog("==Chest==")
+            PrintToConsoleLog(GetHexFormID(chest.chest) + " " + chestName)
+
+            Form[] words = chest.sortWords.GetArray()
+            int wordIndex = 0
+
+            string keywordIds = ""
+            while wordIndex < words.Length
+                Keyword word = words[wordIndex] as Keyword
+                keywordIds += GetHexFormID(word) + ","
+                wordIndex += 1
+            endwhile
+            PrintToConsoleLog(keywordIds)
+        endif
+
+        chestIndex += 1
+    endwhile
+EndFunction
+
+function setKeywords(int chestI, string words)
+  string[] ids = SplitStr(words, ",")
+
+    int i = 0
+    while i < ids.Length
+        Keyword word = Game.GetForm(HexToInt(ids[i])) as Keyword
+
+        if word
+          PrintToConsoleLog("got word" + word)
+        endif
+
+        i += 1
+    endwhile
+endfunction
+
