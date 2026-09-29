@@ -615,7 +615,7 @@ Function printKeywordChests()
             endif
 
             PrintToConsoleLog("==Chest==")
-            PrintToConsoleLog(GetHexFormID(chest.chest) + " " + chestName)
+            PrintToConsoleLog(chestLine(chest.chest))
 
             Form[] words = chest.sortWords.GetArray()
             int wordIndex = 0
@@ -623,7 +623,7 @@ Function printKeywordChests()
             string keywordIds = ""
             while wordIndex < words.Length
                 Keyword word = words[wordIndex] as Keyword
-                keywordIds += GetHexFormID(word) + ","
+                keywordIds += GetHexFormID(word) + "|"
                 wordIndex += 1
             endwhile
             PrintToConsoleLog(keywordIds)
@@ -632,6 +632,22 @@ Function printKeywordChests()
         chestIndex += 1
     endwhile
 EndFunction
+
+string function chestLine(ObjectReference chest)
+  string chestName = GetReferenceName(chest)
+
+  if chestName == ""
+      chestName =  CassiopeiaPapyrusExtender.GetFormEditorID(chest)
+  endif
+
+  Location loc = chest.GetCurrentLocation()
+  string locName =  GetTESFullName(loc)
+  if (locName == "")
+    locName = CassiopeiaPapyrusExtender.GetFormEditorID(loc)
+  endif
+
+  return GetHexFormID(chest) + "|"+ chestName + "|" + locName
+endfunction
 
 function setKeywords(int chestI, string words)
   string[] ids = SplitStr(words, ",")
