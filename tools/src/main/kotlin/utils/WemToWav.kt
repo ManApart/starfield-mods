@@ -6,7 +6,7 @@ import java.nio.file.Files
 import java.nio.file.StandardCopyOption
 import kotlin.io.path.Path
 
-const val TO_WAV = false
+const val TO_WAV = true
 const val USE_VGM = true
 
 fun main() {
@@ -46,5 +46,15 @@ fun File.wemToOgg(ww2oggFolder: File) {
 fun File.wemToWavVgm(vgmFolder: File) {
     Files.copy(toPath(), Path(vgmFolder.absolutePath + "/temp.wem"), StandardCopyOption.REPLACE_EXISTING)
     vgmFolder.runCommand("./vgmstream-cli -o temp.wav temp.wem")
-    Files.copy(Path(vgmFolder.absolutePath + "/temp.wav"), File("${parentFile.absolutePath}/$nameWithoutExtension.wav").toPath(), StandardCopyOption.REPLACE_EXISTING)
+    val dest = File("${parentFile.absolutePath}/$nameWithoutExtension.wav").toPath()
+    println(dest)
+    Files.copy(Path(vgmFolder.absolutePath + "/temp.wav"), dest, StandardCopyOption.REPLACE_EXISTING)
+}
+
+fun File.wavToOgg(dest: File){
+    parentFile.runCommand("ffmpeg -i $absolutePath ${dest.absolutePath}")
+}
+
+fun File.oggToWem(wav2wem: File) {
+    parentFile.runCommand("${wav2wem.absolutePath} ${this.absolutePath}")
 }
