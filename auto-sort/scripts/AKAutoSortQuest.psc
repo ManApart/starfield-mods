@@ -15,6 +15,7 @@ FormList Property CombinedTrackedSortWords Auto
 Armor Property tool Auto Const
 ;0 = exact, 1 = keyword, 2 = drain
 Int Property UnTrackKind Auto
+Keyword[] Property AllKeywords Auto Const
 
 struct SortedChest
       ObjectReference chest
@@ -198,28 +199,31 @@ function removeIndexedChest2(int i, bool loud)
   elseif (loud)
     Debug.Notification("Chest is not tracked")
   endif
-  
 endFunction
 
 function printSortWords()
   IsCurrentlySorting = false
   int chestI = TrackedChests.FindStruct("chest", selectedChest)
   int chestO = ExactMatchChests.FindStruct("chest", selectedChest)
+  string chestName = chestName(selectedChest)
+
   if (chestO != -1)
-    Debug.Notification("Chest "+chestO+" matches on exact items")
+    Debug.Notification(chestName+" matches on exact items")
   elseif (DrainChests.HasForm(selectedChest))
     int i = IndexOf(DrainChests.GetArray(), selectedChest)
-    Debug.Notification("Chest "+i+" is a drain chest")
+    Debug.Notification(chestName+" is a drain chest")
   elseif (chestI == -1)
     Debug.Notification("Chest is not tracked")
   else
-    Debug.Notification("Chest " + chestI)
+    Debug.Notification(chestName)
     Form[] raw = TrackedChests[chestI].sortWords.GetArray()
     Int i = raw.length
+    string keywords = ""
     while (i > 0)
       i -= 1
-      Debug.Notification(raw[i])
+      keywords += keywordString(raw[i] as Keyword) +","
     endWhile
+    Debug.Notification(keywords)
   endif
 endFunction
 
@@ -239,12 +243,12 @@ EndFunction
 
 function addSortWords(SortedChest chest, Keyword word)
   chest.sortWords.addForm(word)
-  Debug.Notification("Added word" + word)
+  Debug.Notification("Added word" + keywordString(word))
 EndFunction
 
 function removeSortWords(SortedChest chest, Keyword word)
   chest.sortWords.removeAddedForm(word)
-  Debug.Notification("Removed word" + word)
+  Debug.Notification("Removed word" + keywordString(word))
 EndFunction
 
 function sortItems()
@@ -574,3 +578,103 @@ int Function IndexOf(Form[] forms, Form target)
 
     return -1
 EndFunction
+
+Function printKeywords()
+  int i = 0
+  PrintToConsoleLog("==All Keywords==")
+  while i < AllKeywords.Length
+    Keyword word = AllKeywords[i]
+    i += 1
+    PrintToConsoleLog(GetHexFormID(word) + " " + keywordString(word))
+  endwhile
+
+endfunction
+
+string function keywordString(Keyword word)
+  string wordName = GetTESFullName(word)
+
+  if wordName == ""
+      wordName = GetKeywordLinkageName(word)
+  endif
+
+  if wordName == ""
+      wordName = CassiopeiaPapyrusExtender.GetFormEditorID(word)
+  endif
+
+  return wordName
+endfunction
+
+Function printKeywordChests()
+    int chestIndex = 0
+
+    while chestIndex < TrackedChests.Length
+        SortedChest chest = TrackedChests[chestIndex]
+
+        if chest.chest != None
+            string chestName = GetReferenceName(chest.chest)
+
+            if chestName == ""
+                chestName = CassiopeiaPapyrusExtender.GetFormEditorID(chest.chest)
+            endif
+
+            PrintToConsoleLog("==Chest==")
+            PrintToConsoleLog(chestLine(chest.chest))
+
+            Form[] words = chest.sortWords.GetArray()
+            int wordIndex = 0
+
+            string keywordIds = ""
+            while wordIndex < words.Length
+                Keyword word = words[wordIndex] as Keyword
+                keywordIds += GetHexFormID(word) + "|"
+                wordIndex += 1
+            endwhile
+            PrintToConsoleLog(keywordIds)
+        endif
+
+        chestIndex += 1
+    endwhile
+EndFunction
+
+string function chestName(ObjectReference chest)
+  string chestName = GetReferenceName(chest)
+
+  if chestName == ""
+      chestName = CassiopeiaPapyrusExtender.GetFormEditorID(chest)
+  endif
+  return chestName
+endFunction
+
+string function chestLine(ObjectReference chest)
+  string chestName = chestName(chest)
+
+  Location loc = chest.GetCurrentLocation()
+  string locName =  GetTESFullName(loc)
+  if (locName == "")
+    locName = CassiopeiaPapyrusExtender.GetFormEditorID(loc)
+  endif
+
+  return GetHexFormID(chest) + "|"+ chestName + "|" + locName
+endfunction
+
+function setKeywords(int chestI, string rawWords)
+  string[] ids = SplitStr(rawWords, ",")
+  SortedChest chest = TrackedChests[chestI]
+  FormList words = chest.sortWords
+  if (chest == none || words == none)
+    return
+  endif
+  words.revert()
+
+  int i = 0
+  while i < ids.Length
+    Keyword word = Game.GetForm(HexToInt(ids[i])) as Keyword
+
+    if word
+      words.addForm(word)
+    endif
+
+    i += 1
+    endwhile
+endfunction
+

@@ -23,7 +23,7 @@ fun main() {
         LineScript(text, voice, outPut, outOgg, outWem)
     }
 
-    scripts.filter { !it.outWav.exists() }.chunked(30)
+    scripts.filter { !it.outWav.exists() }.also { println("Processing ${it.size} scripts") }.chunked(30)
         .forEach { processBatch(dir, it, true) }
 
     scripts.filter { it.outWav.exists() && !it.outOgg.exists() }.forEach { it.outWav.wavToOgg(it.outOgg) }
