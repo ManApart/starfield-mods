@@ -586,17 +586,7 @@ Function printKeywords()
 endfunction
 
 string function keywordString(Keyword word)
-  string wordName = GetTESFullName(word)
-
-  if wordName == ""
-      wordName = GetKeywordLinkageName(word)
-  endif
-
-  if wordName == ""
-      wordName = CassiopeiaPapyrusExtender.GetFormEditorID(word)
-  endif
-
-  return wordName
+  return CassiopeiaPapyrusExtender.GetFormEditorID(word)
 endfunction
 
 Function printKeywordChests()
@@ -644,7 +634,7 @@ string function chestLine(ObjectReference chest)
   string chestName = chestName(chest)
 
   Location loc = chest.GetCurrentLocation()
-  string locName =  GetTESFullName(loc)
+  string locName = GetTESFullName(loc)
   if (locName == "")
     locName = CassiopeiaPapyrusExtender.GetFormEditorID(loc)
   endif
