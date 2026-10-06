@@ -2,6 +2,7 @@ Scriptname AKAutoSortQuest extends Quest conditional
 
 Import CassiopeiaPapyrusExtender
 
+Actor Property PlayerRef Auto
 SortedChest[] Property TrackedChests Auto
 ExactMatchChest[] Property ExactMatchChests Auto
 FormList Property DrainChests Auto
@@ -77,7 +78,6 @@ function addContainer(ObjectReference containerToAdd)
     if (freeSlot == -1)
       Debug.Notification("There are no more slots. Please remove a chest.")
     else
-      Actor player = Game.GetPlayer()
       SortedChest chest = TrackedChests[freeSlot]
       chest.chest = containerToAdd
       Debug.Notification("Chest is now tracked")
@@ -99,7 +99,6 @@ function addExactContainer(ObjectReference containerToAdd)
     if (freeSlot == -1)
       Debug.Notification("There are no more slots. Please remove a chest.")
     else
-      Actor player = Game.GetPlayer()
       ExactMatchChest chest = ExactMatchChests[freeSlot]
       chest.chest = containerToAdd
       updateExactSortItems(chest)
@@ -262,7 +261,7 @@ function sortItems()
     endif
     i +=1
   endwhile
-  sortItemsFrom(Game.getPlayer())
+  sortItemsFrom(PlayerRef)
 endFunction
 
 function sortItemsFrom(ObjectReference source)
@@ -272,8 +271,7 @@ function sortItemsFrom(ObjectReference source)
     return
   endif
   IsCurrentlySorting = true
-  Actor player = Game.GetPlayer()
-  bool isPlayer = source == player
+  bool isPlayer = source == PlayerRef
   Form[] items = GetInventoryItems(source, true)
   if (items.length == 0)
     Debug.Notification("No items found. Is Cassiopeia installed correctly?")
@@ -294,8 +292,8 @@ function sortItemsFrom(ObjectReference source)
 
   Form[] favs = GetFavorites()
 
-  sortExactChestItems(exactChestIndexes, items, source, player, favs, isPlayer)
-  sortKeywordChestItems(trackedChestIndexes, items, source, player, favs, isPlayer)
+  sortExactChestItems(exactChestIndexes, items, source, playerref, favs, isPlayer)
+  sortKeywordChestItems(trackedChestIndexes, items, source, playerref, favs, isPlayer)
 
   float t1 = Utility.GetCurrentRealTime()
   IsCurrentlySorting = false
@@ -513,22 +511,20 @@ function prepareCombinedTrackedSortWords(Int[] trackedChestIndexes)
 endFunction
 
 function addFavoritesInChest()
-  Actor player = Game.GetPlayer()
   Form[] items = GetInventoryItems(selectedChest, true)
   Int i = items.length
   while (i > 0)
     i -= 1
     Form item = items[i]
     int count = selectedChest.GetItemCount(item)
-    selectedChest.RemoveItem(item, count, true, player)
-    player.MarkItemAsFavorite(item)
+    selectedChest.RemoveItem(item, count, true, playerref)
+    playerref.MarkItemAsFavorite(item)
   endWhile
 
   Debug.Notification("Favorited " + items.length + " items")
 endFunction
 
 function addItemsInChestToExcludeList()
-  Actor player = Game.GetPlayer()
   Form[] items = GetInventoryItems(selectedChest, true)
   Int i = items.length
   
@@ -536,7 +532,7 @@ function addItemsInChestToExcludeList()
     i -= 1
     Form item = items[i]
     int count = selectedChest.GetItemCount(item)
-    selectedChest.RemoveItem(item, count, true, player)
+    selectedChest.RemoveItem(item, count, true, playerref)
     ExcludeList.addForm(item)
   endWhile
 
@@ -544,7 +540,6 @@ function addItemsInChestToExcludeList()
 endFunction
 
 function removeItemsInChestFromExcludeList()
-  Actor player = Game.GetPlayer()
   Form[] items = GetInventoryItems(selectedChest, true)
   Int i = items.length
   
@@ -552,7 +547,7 @@ function removeItemsInChestFromExcludeList()
     i -= 1
     Form item = items[i]
     int count = selectedChest.GetItemCount(item)
-    selectedChest.RemoveItem(item, count, true, player)
+    selectedChest.RemoveItem(item, count, true, playerref)
     ExcludeList.removeAddedForm(item)
   endWhile
 
