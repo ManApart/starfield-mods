@@ -159,6 +159,24 @@ function removeContainer(ObjectReference containerToRemove)
   endif
 endFunction
 
+; 0 = Keyword, 1 = Exact, 2 = Drain
+function removeNthContainer(int kind, int i)
+  if (kind == 0)
+    SortedChest chest = TrackedChests[i]
+    chest.chest = None
+    chest.sortWords.Revert()
+    Debug.Notification("Tracked Chest is no longer tracked")
+  elseif (kind == 1)
+    ExactMatchChest chest = ExactMatchChests[i]
+    chest.chest = None
+    chest.sortItems.Revert()
+    Debug.Notification("Exact Chest is no longer tracked")
+  else
+    Form chest = DrainChests.getAt(i)
+    DrainChests.removeAddedForm(chest)
+  endif
+endFunction
+
 function removeIndexedChests()
   int i = 0
   while (i<=20)
@@ -615,6 +633,41 @@ Function printKeywordChests()
                 wordIndex += 1
             endwhile
             PrintToConsoleLog(keywordIds)
+        endif
+
+        chestIndex += 1
+    endwhile
+EndFunction
+
+Function printDrainChests()
+    int chestIndex = 0
+    int chestMax = DrainChests.GetSize()
+    Form[] drains = DrainChests.GetArray()
+
+    while chestIndex < chestMax
+        Form chest = drains[chestIndex]
+        if chest != None
+            string chestName = CassiopeiaPapyrusExtender.GetFormEditorID(chest)
+            PrintToConsoleLog("==Chest==")
+            PrintToConsoleLog(GetHexFormID(chest) + "|" + chestName)
+        endif
+
+        chestIndex += 1
+    endwhile
+EndFunction
+
+Function printExactChests()
+    int chestIndex = 0
+
+    while chestIndex < ExactMatchChests.Length
+        ExactMatchChest chest = ExactMatchChests[chestIndex]
+        if chest.chest != None
+            string chestName = GetReferenceName(chest.chest)
+            if chestName == ""
+                chestName = CassiopeiaPapyrusExtender.GetFormEditorID(chest.chest)
+            endif
+            PrintToConsoleLog("==Chest==")
+            PrintToConsoleLog(chestLine(chest.chest))
         endif
 
         chestIndex += 1
